@@ -35,5 +35,10 @@ class UserAdmin(auth_admin.UserAdmin):
         ),
         (_("Important dates"), {"fields": ("last_login", "date_joined")}),
     )
-    list_display = ["username", "name", "is_superuser"]
-    search_fields = ["name"]
+
+    @admin.display(description="Name")
+    def full_name(self, obj):
+        return f"{obj.first_name} {obj.last_name}"
+
+    list_display = ["username", "full_name", "is_superuser"]
+    search_fields = ["first_name", "last_name", "username"]
