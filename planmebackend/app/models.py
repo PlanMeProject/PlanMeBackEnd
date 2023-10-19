@@ -9,9 +9,10 @@ The models module defines the data models used in the project.
 """
 from django.db import models
 from ..utils.model_abstracts import Model
-from django.utils import timezone
+from django.contrib.auth.models import AbstractUser
 
-class User(Model):
+
+class User(AbstractUser, Model):
     """Model definition for User."""
     class Meta:
         """Meta definition for User."""
