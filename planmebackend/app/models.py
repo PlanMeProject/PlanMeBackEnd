@@ -8,7 +8,7 @@ The models module defines the data models used in the project.
 - DataVisualization: Represents data visualizations associated with tasks.
 """
 from django.db import models
-from utils.model_abstracts import Model
+from ..utils.model_abstracts import Model
 
 
 class User(Model):

@@ -85,7 +85,6 @@ THIRD_PARTY_APPS = [
 ]
 
 LOCAL_APPS = [
-    "planmebackend.users",
     'planmebackend.app',
 
 ]
@@ -105,9 +104,9 @@ AUTHENTICATION_BACKENDS = [
     "allauth.account.auth_backends.AuthenticationBackend",
 ]
 # https://docs.djangoproject.com/en/dev/ref/settings/#auth-user-model
-AUTH_USER_MODEL = "users.User"
+# AUTH_USER_MODEL = "users.User"
 # https://docs.djangoproject.com/en/dev/ref/settings/#login-redirect-url
-LOGIN_REDIRECT_URL = "users:redirect"
+# LOGIN_REDIRECT_URL = "users:redirect"
 # https://docs.djangoproject.com/en/dev/ref/settings/#login-url
 LOGIN_URL = "account_login"
 
@@ -189,7 +188,6 @@ TEMPLATES = [
                 "django.template.context_processors.static",
                 "django.template.context_processors.tz",
                 "django.contrib.messages.context_processors.messages",
-                "planmebackend.users.context_processors.allauth_settings",
             ],
         },
     }
@@ -272,14 +270,14 @@ ACCOUNT_EMAIL_REQUIRED = True
 # https://django-allauth.readthedocs.io/en/latest/configuration.html
 ACCOUNT_EMAIL_VERIFICATION = "mandatory"
 # https://django-allauth.readthedocs.io/en/latest/configuration.html
-ACCOUNT_ADAPTER = "planmebackend.users.adapters.AccountAdapter"
+# ACCOUNT_ADAPTER = "planmebackend.users.adapters.AccountAdapter"
 # https://django-allauth.readthedocs.io/en/latest/forms.html
-ACCOUNT_FORMS = {"signup": "planmebackend.users.forms.UserSignupForm"}
+# ACCOUNT_FORMS = {"signup": "planmebackend.app.forms.UserSignupForm"}
 # https://django-allauth.readthedocs.io/en/latest/configuration.html
-SOCIALACCOUNT_ADAPTER = "planmebackend.users.adapters.SocialAccountAdapter"
+# SOCIALACCOUNT_ADAPTER = "planmebackend.users.adapters.SocialAccountAdapter"
 # https://django-allauth.readthedocs.io/en/latest/forms.html
-SOCIALACCOUNT_FORMS = {"signup": "planmebackend.users.forms.UserSocialSignupForm"}
-
+# SOCIALACCOUNT_FORMS = {"signup": "planmebackend.users.forms.UserSocialSignupForm"}
+#
 # django-rest-framework
 # -------------------------------------------------------------------------------
 # django-rest-framework - https://www.django-rest-framework.org/api-guide/settings/
