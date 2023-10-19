@@ -69,11 +69,7 @@ DJANGO_APPS = [
     # "django.contrib.humanize", # Handy template tags
     "django.contrib.admin",
     "django.forms",
-    'django_extensions',
     'django_filters',
-    'rest_framework',
-    'planmebackend.users',
-    'planmebackend.app',
 ]
 
 THIRD_PARTY_APPS = [
@@ -90,7 +86,8 @@ THIRD_PARTY_APPS = [
 
 LOCAL_APPS = [
     "planmebackend.users",
-    # Your stuff: custom apps go here
+    'planmebackend.app',
+
 ]
 # https://docs.djangoproject.com/en/dev/ref/settings/#installed-apps
 INSTALLED_APPS = DJANGO_APPS + THIRD_PARTY_APPS + LOCAL_APPS
