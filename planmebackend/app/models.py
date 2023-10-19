@@ -9,7 +9,7 @@ The models module defines the data models used in the project.
 """
 from django.db import models
 from ..utils.model_abstracts import Model
-
+from django.utils import timezone
 
 class User(Model):
     """Model definition for User."""
