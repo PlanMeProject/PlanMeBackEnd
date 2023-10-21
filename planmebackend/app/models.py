@@ -71,16 +71,13 @@ class SubTask(Model):
         return self.title
 
 
-#
-# class Dashboard(Model):
-#     """Model definition for Dashboard."""
-#
-#     user = models.ForeignKey(User, on_delete=models.CASCADE,
-#                              related_name="dashboard")
-#
-#
-# class DataVisualization(Model):
-#     """Model definition for DataVisualization."""
-#
-#     task = models.ForeignKey(Task, on_delete=models.CASCADE,
-#                              related_name="data_visualization")
+class Dashboard(Model):
+    """Model definition for Dashboard."""
+
+    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name="dashboard")
+
+
+class DataVisualization(Model):
+    """Model definition for DataVisualization."""
+
+    task = models.ForeignKey(Task, on_delete=models.CASCADE, related_name="data_visualization")
