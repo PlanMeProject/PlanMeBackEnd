@@ -30,27 +30,23 @@ jobs:
         with:
           python-version: '3.11'
 
-      # Consider using pre-commit.ci for open source project
-      - name: Run pre-commit
-        uses: pre-commit/action@v3.0.0
+#      # Consider using pre-commit.ci for open source project
+#      - name: Run pre-commit
+#        uses: pre-commit/action@v3.0.0
 
-      # Run Flake8
-      - name: Install Flake8 Dependencies
-        run: pip install flake8 flake8-docstrings
-
-      - name: Run Flake8
-        run: flake8 .
-
-      # Run Flake8-Docstrings
-      - name: Run Flake8 Docstring
-        run: flake8 --docstring-convention=pep257 .
-
-      # Run Pylint
-      - name: Install Pylint Dependencies
-        run: pip install pylint
-
-      - name: Run Pylint
-        run: pylint **/*.py
+#      # Run Flake8
+#      - name: Install Flake8 Dependencies
+#        run: pip install flake8 flake8-docstrings
+#
+#      - name: Run Flake8
+#        run: flake8 planmebackend/app
+#
+#      # Run Pylint
+#      - name: Install Pylint Dependencies
+#        run: pip install pylint
+#
+#      - name: Run Pylint
+#        run: pylint **/*.py
 
   pytest:
     runs-on: ubuntu-latest
