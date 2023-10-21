@@ -169,12 +169,6 @@ class DashboardViewSet(viewsets.ViewSet):
     ViewSet for handling Dashboard-related operations.
     """
 
-    def list(self, request):
-        """List all Dashboard objects."""
-        queryset = Dashboard.objects.all()
-        serializer = DashboardSerializer(queryset, many=True)
-        return Response(serializer.data, status=status.HTTP_200_OK)
-
     def create(self, request):
         """Create a new Dashboard object."""
         serializer = DashboardSerializer(data=request.data)
