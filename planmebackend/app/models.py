@@ -43,7 +43,6 @@ class Task(Model):
     title = models.CharField(max_length=255)
     description = models.TextField()
     summarized_text = models.TextField()
-    bullet_text = models.TextField()
     due_date = models.DateField()
     status = models.CharField(max_length=255)
     user = models.ForeignKey(User, on_delete=models.CASCADE, related_name="tasks")
@@ -72,13 +71,16 @@ class SubTask(Model):
         return self.title
 
 
-class Dashboard(Model):
-    """Model definition for Dashboard."""
-
-    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name="dashboard")
-
-
-class DataVisualization(Model):
-    """Model definition for DataVisualization."""
-
-    task = models.ForeignKey(Task, on_delete=models.CASCADE, related_name="data_visualization")
+#
+# class Dashboard(Model):
+#     """Model definition for Dashboard."""
+#
+#     user = models.ForeignKey(User, on_delete=models.CASCADE,
+#                              related_name="dashboard")
+#
+#
+# class DataVisualization(Model):
+#     """Model definition for DataVisualization."""
+#
+#     task = models.ForeignKey(Task, on_delete=models.CASCADE,
+#                              related_name="data_visualization")
