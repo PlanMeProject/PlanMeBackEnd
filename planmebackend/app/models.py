@@ -7,18 +7,21 @@ The models module defines the data models used in the project.
 - Dashboard: Represents a dashboard associated with a user.
 - DataVisualization: Represents data visualizations associated with tasks.
 """
-from django.db import models
-from ..utils.model_abstracts import Model
 from django.contrib.auth.models import AbstractUser
+from django.db import models
+
+from ..utils.model_abstracts import Model
 
 
 class User(AbstractUser, Model):
     """Model definition for User."""
+
     class Meta:
         """Meta definition for User."""
+
         verbose_name = "User"
         verbose_name_plural = "Users"
-        ordering = ['id']
+        ordering = ["id"]
 
     token = models.CharField(max_length=255)
 
@@ -29,11 +32,13 @@ class User(AbstractUser, Model):
 
 class Task(Model):
     """Model definition for Task."""
+
     class Meta:
         """Meta definition for Task."""
+
         verbose_name = "Task"
         verbose_name_plural = "Tasks"
-        ordering = ['due_date']
+        ordering = ["due_date"]
 
     title = models.CharField(max_length=255)
     description = models.TextField()
@@ -41,8 +46,7 @@ class Task(Model):
     bullet_text = models.TextField()
     due_date = models.DateField()
     status = models.CharField(max_length=255)
-    user = models.ForeignKey(User, on_delete=models.CASCADE,
-                             related_name="tasks")
+    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name="tasks")
 
     def __str__(self):
         """Unicode's representation of Task."""
@@ -51,16 +55,17 @@ class Task(Model):
 
 class SubTask(Model):
     """Model definition for SubTask."""
+
     class Meta:
         """Meta definition for SubTask."""
+
         verbose_name = "SubTask"
         verbose_name_plural = "SubTasks"
-        ordering = ['id']
+        ordering = ["id"]
 
     title = models.CharField(max_length=255)
     status = models.CharField(max_length=255)
-    task = models.ForeignKey(Task, on_delete=models.CASCADE,
-                             related_name="subtasks")
+    task = models.ForeignKey(Task, on_delete=models.CASCADE, related_name="subtasks")
 
     def __str__(self):
         """Unicode's representation of SubTask."""
@@ -69,11 +74,11 @@ class SubTask(Model):
 
 class Dashboard(Model):
     """Model definition for Dashboard."""
-    user = models.ForeignKey(User, on_delete=models.CASCADE,
-                             related_name="dashboard")
+
+    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name="dashboard")
 
 
 class DataVisualization(Model):
     """Model definition for DataVisualization."""
-    task = models.ForeignKey(Task, on_delete=models.CASCADE,
-                             related_name="data_visualization")
+
+    task = models.ForeignKey(Task, on_delete=models.CASCADE, related_name="data_visualization")
