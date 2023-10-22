@@ -47,7 +47,16 @@ LOCALE_PATHS = [str(BASE_DIR / "locale")]
 # ------------------------------------------------------------------------------
 # https://docs.djangoproject.com/en/dev/ref/settings/#databases
 if os.environ.get("GITHUB_ACTIONS") == "true":
-    DATABASES = {"default": env.db("DATABASE_URL")}
+    DATABASES = {
+        "default": {
+            "ENGINE": "django.db.backends.postgresql",
+            "NAME": "github_actions_db",
+            "USER": "github_actions_user",
+            "PASSWORD": "github_actions_password",
+            "HOST": "localhost",
+            "PORT": "5432",
+        }
+    }
 else:
     DATABASES = {
         "default": {
