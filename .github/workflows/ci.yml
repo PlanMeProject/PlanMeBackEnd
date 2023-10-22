@@ -25,13 +25,13 @@ jobs:
           echo RAILWAY_PORT=${{ secrets.RAILWAY_PORT }} >> .env
 
       - name: Build the Stack
-        run: docker compose --env-file .env -f local.yml build
+        run: docker compose -f local.yml build
 
       - name: Run DB Migrations
-        run: docker compose --env-file .env -f local.yml run --rm django python manage.py migrate
+        run: docker compose -f local.yml run --rm django python manage.py migrate
 
       - name: Run API Tests
-        run: docker compose --env-file .env -f local.yml run --rm django python manage.py test planmebackend/app/tests/
+        run: docker compose -f local.yml run --rm django python manage.py test planmebackend/app/tests/
 
       - name: Tear down the Stack
         run: docker compose -f local.yml down
