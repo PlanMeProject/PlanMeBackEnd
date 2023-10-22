@@ -1,14 +1,6 @@
 name: CI
 
 # Enable Buildkit and let compose use it to speed up image building
-env:
-  DOCKER_BUILDKIT: 1
-  COMPOSE_DOCKER_CLI_BUILD: 1
-  RAILWAY_NAME: ${{ secrets.RAILWAY_NAME }}
-  RAILWAY_USER: ${{ secrets.RAILWAY_USER }}
-  RAILWAY_PASSWORD: ${{ secrets.RAILWAY_PASSWORD }}
-  RAILWAY_HOST: ${{ secrets.RAILWAY_HOST }}
-  RAILWAY_PORT: ${{ secrets.RAILWAY_PORT }}
 
 on:
   pull_request:
@@ -55,7 +47,14 @@ jobs:
 
   pytest:
     runs-on: ubuntu-latest
-
+    env:
+      DOCKER_BUILDKIT: 1
+      COMPOSE_DOCKER_CLI_BUILD: 1
+      RAILWAY_NAME: ${{ secrets.RAILWAY_NAME }}
+      RAILWAY_USER: ${{ secrets.RAILWAY_USER }}
+      RAILWAY_PASSWORD: ${{ secrets.RAILWAY_PASSWORD }}
+      RAILWAY_HOST: ${{ secrets.RAILWAY_HOST }}
+      RAILWAY_PORT: ${{ secrets.RAILWAY_PORT }}
     steps:
       - name: Checkout Code Repository
         uses: actions/checkout@v4
