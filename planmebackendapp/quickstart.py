@@ -1,53 +1,123 @@
-import os.path
+# from google_auth_oauthlib.flow import InstalledAppFlow
+# from googleapiclient.discovery import build
 
-from google.auth.transport.requests import Request
-from google.oauth2.credentials import Credentials
+# # Initialize the API
+# scopes = [
+#     'https://www.googleapis.com/auth/classroom.courses.readonly',
+#     'https://www.googleapis.com/auth/classroom.rosters.readonly',
+#     'https://www.googleapis.com/auth/classroom.course-work.readonly',
+#     'https://www.googleapis.com/auth/classroom.student-submissions.me.readonly',
+# ]
+
+# flow = InstalledAppFlow.from_client_secrets_file('credentials.json', scopes)
+# credentials = flow.run_local_server(port=0)
+# service = build('classroom', 'v1', credentials=credentials)
+
+# # Get the list of courses where you are a student
+# results = service.courses().list(studentId='me').execute()
+# courses = results.get('courses', [])
+
+# # Get the list of students in the course
+# students_results = service.courses().students().list(courseId=course['id']).execute()
+# students = students_results.get('students', [])
+
+# def student_information(students):
+
+#     user = {
+#         'course_id': students[0]['courseId'],
+#         'user_id': students[0]['userId'],
+#         'name': students[0]['profile']['name']['givenName'],
+#         'family_name': students[0]['profile']['name']['familyName'],
+#         'full_name': students[0]['profile']['name']['fullName'],
+#     }
+
+#     return user
+
+# print(student_information(students))
+# # Loop through each course
+# # for course in courses:
+# #     print("Course Name:", course['name'])
+# #     # Get the list of students in the course
+# #     print(student_information(course))
+#     # print()
+
+#     # Loop through each student
+#     # for student in students:
+#     #     # print("Student Name:", student['profile']['name']['fullName'])
+#     #     print(student['profile']['name'])
+#     # print()
+#     # Get the list of assignments (course work) in the course
+#     # coursework_results = service.courses().courseWork().list(courseId=course['id']).execute()
+#     # course_works = coursework_results.get('courseWork', [])
+
+#     # Loop through each assignment
+#     # for work in course_works:
+#     #     # Get student submissions for this assignment
+#     #     submissions_results = service.courses().courseWork().studentSubmissions().list(
+#     #         courseId=course['id'], courseWorkId=work['id'], userId='me').execute()
+#     #     submissions = submissions_results.get('studentSubmissions', [])
+
+#     #     # Check if the assignment is not done
+#     #     if not any(submission.get('state') in ['TURNED_IN', 'RETURNED'] for submission in submissions):
+#     #         print("Assignment Title:", work['title'])
+#     #         print("Assignment Description:", work.get('description', 'No description'))
+#     #         print("Due Date:", work.get('dueDate', 'No due date'))
+
 from google_auth_oauthlib.flow import InstalledAppFlow
 from googleapiclient.discovery import build
-from googleapiclient.errors import HttpError
 
-# If modifying these scopes, delete the file token.json.
-SCOPES = ["https://www.googleapis.com/auth/classroom.courses.readonly"]
+
+def initialize_api():
+    scopes = [
+        "https://www.googleapis.com/auth/classroom.courses.readonly",
+        "https://www.googleapis.com/auth/classroom.rosters.readonly",
+        "https://www.googleapis.com/auth/classroom.course-work.readonly",
+        "https://www.googleapis.com/auth/classroom.student-submissions.me.readonly",
+    ]
+
+    flow = InstalledAppFlow.from_client_secrets_file("credentials.json", scopes)
+    credentials = flow.run_local_server(port=0)
+    service = build("classroom", "v1", credentials=credentials)
+
+    return service
+
+
+def get_courses(service):
+    results = service.courses().list(studentId="me").execute()
+    return results.get("courses", [])
+
+
+def get_students(service, course_id):
+    students_results = service.courses().students().list(courseId=course_id).execute()
+    return students_results.get("students", [])
+
+
+def student_information(students):
+    student_info = []
+    for student in students:
+        info = {
+            "course_id": student["courseId"],
+            "user_id": student["userId"],
+            "name": student["profile"]["name"]["givenName"],
+            "family_name": student["profile"]["name"]["familyName"],
+            "full_name": student["profile"]["name"]["fullName"],
+        }
+        student_info.append(info)
+    return student_info
 
 
 def main():
-    """Shows basic usage of the Classroom API.
-    Prints the names of the first 10 courses the user has access to.
-    """
-    creds = None
-    # The file token.json stores the user's access and refresh tokens, and is
-    # created automatically when the authorization flow completes for the first
-    # time.
-    if os.path.exists("token.json"):
-        creds = Credentials.from_authorized_user_file("token.json", SCOPES)
-    # If there are no (valid) credentials available, let the user log in.
-    if not creds or not creds.valid:
-        if creds and creds.expired and creds.refresh_token:
-            creds.refresh(Request())
-        else:
-            flow = InstalledAppFlow.from_client_secrets_file("credentials.json", SCOPES)
-            creds = flow.run_local_server(port=0)
-        # Save the credentials for the next run
-        with open("token.json", "w") as token:
-            token.write(creds.to_json())
+    service = initialize_api()
+    courses = get_courses(service)
+    for course in courses:
+        print(course)
+        print()
 
-    try:
-        service = build("classroom", "v1", credentials=creds)
-
-        # Call the Classroom API
-        results = service.courses().list(pageSize=10).execute()
-        courses = results.get("courses", [])
-
-        if not courses:
-            print("No courses found.")
-            return
-        # Prints the names of the first 10 courses.
-        print("Courses:")
-        for course in courses:
-            print(course["name"])
-
-    except HttpError as error:
-        print("An error occurred: %s" % error)
+    # for course in courses:
+    #     print("Course Name:", course['name'])
+    #     students = get_students(service, course['id'])
+    #     print(student_information(students))
+    #     print()
 
 
 if __name__ == "__main__":
