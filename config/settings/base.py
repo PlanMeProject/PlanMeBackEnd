@@ -49,11 +49,11 @@ LOCALE_PATHS = [str(BASE_DIR / "locale")]
 DATABASES = {
     "default": {
         "ENGINE": "django.db.backends.postgresql",
-        "NAME": env("RAILWAY_NAME"),
-        "USER": env("RAILWAY_USER"),
-        "PASSWORD": env("RAILWAY_PASSWORD"),
-        "HOST": env("RAILWAY_HOST"),
-        "PORT": env("RAILWAY_PORT"),
+        "NAME": env("RAILWAY_NAME", default="None"),
+        "USER": env("RAILWAY_USER", default="None"),
+        "PASSWORD": env("RAILWAY_PASSWORD", default="None"),
+        "HOST": env("RAILWAY_HOST", default="None"),
+        "PORT": env("RAILWAY_PORT", default="None"),
     }
 }
 
