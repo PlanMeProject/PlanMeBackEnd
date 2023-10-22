@@ -1,15 +1,29 @@
 from django.conf import settings
 from rest_framework.routers import DefaultRouter, SimpleRouter
+from rest_framework_nested import routers
 
-from planmebackend.users.api.views import UserViewSet
+from planmebackend.app.api.views import (
+    DashboardViewSet,
+    DataVisualizationViewSet,
+    SubTaskViewSet,
+    TaskViewSet,
+    UserViewSet,
+)
 
 if settings.DEBUG:
     router = DefaultRouter()
 else:
     router = SimpleRouter()
 
-router.register("users", UserViewSet)
+router.register("users", UserViewSet, basename="user")
+router.register("tasks", TaskViewSet, basename="task")
 
+users_router = routers.NestedSimpleRouter(router, "users", lookup="user")
+users_router.register("dashboard", DashboardViewSet, basename="user-dashboard")
+
+tasks_router = routers.NestedSimpleRouter(router, "tasks", lookup="task")
+tasks_router.register("subtasks", SubTaskViewSet, basename="task-subtask")
+tasks_router.register("visualization", DataVisualizationViewSet, basename="task-visualization")
 
 app_name = "api"
-urlpatterns = router.urls
+urlpatterns = router.urls + tasks_router.urls + users_router.urls
