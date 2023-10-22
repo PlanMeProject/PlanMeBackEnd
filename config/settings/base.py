@@ -1,7 +1,6 @@
 """
 Base settings to build other settings files upon.
 """
-import os
 from pathlib import Path
 
 import environ
@@ -44,53 +43,21 @@ USE_TZ = True
 LOCALE_PATHS = [str(BASE_DIR / "locale")]
 
 # DATABASES
+DATABASES = {"default": env.db("DATABASE_URL")}
+DATABASES["default"]["ATOMIC_REQUESTS"] = True
 # ------------------------------------------------------------------------------
 # https://docs.djangoproject.com/en/dev/ref/settings/#databases
-# if os.environ.get("GITHUB_ACTIONS") == "true":
-#     DATABASES = {
-#         "default": {
-#             "ENGINE": "django.db.backends.postgresql",
-#             "NAME": "github_actions_db",
-#             "USER": "github_actions_user",
-#             "PASSWORD": "github_actions_password",
-#             "HOST": "localhost",
-#             "PORT": "5432",
-#         }
+#
+# DATABASES = {
+#     "default": {
+#         "ENGINE": "django.db.backends.postgresql",
+#         "NAME": env("RAILWAY_NAME", default="Not set"),
+#         "USER": env("RAILWAY_USER", default="Not set"),
+#         "PASSWORD": env("RAILWAY_PASSWORD", default="Not set"),
+#         "HOST": env("RAILWAY_HOST", default="Not set"),
+#         "PORT": env("RAILWAY_PORT", default="Not set"),
 #     }
-# else:
-#     DATABASES = {
-#         "default": {
-#             "ENGINE": "django.db.backends.postgresql",
-#             "NAME": env("RAILWAY_NAME", default="Not set"),
-#             "USER": env("RAILWAY_USER", default="Not set"),
-#             "PASSWORD": env("RAILWAY_PASSWORD", default="Not set"),
-#             "HOST": env("RAILWAY_HOST", default="Not set"),
-#             "PORT": env("RAILWAY_PORT", default="Not set"),
-#         }
-#     }
-if os.environ.get("GITHUB_ACTIONS") == "true":
-    DATABASES = {
-        "default": {
-            "ENGINE": "django.db.backends.postgresql",
-            "NAME": "github_actions_db",
-            "USER": "github_actions_user",
-            "PASSWORD": "github_actions_password",
-            "HOST": "localhost",
-            "PORT": "5432",
-        }
-    }
-else:
-    DATABASES = {
-        "default": {
-            "ENGINE": "django.db.backends.postgresql",
-            "NAME": "local_db_name",
-            "USER": "local_db_user",
-            "PASSWORD": "local_db_password",
-            "HOST": "localhost",
-            "PORT": "5432",
-        }
-    }
-
+# }
 
 # DATABASES["default"]["ATOMIC_REQUESTS"] = True
 # https://docs.djangoproject.com/en/stable/ref/settings/#std:setting-DEFAULT_AUTO_FIELD
