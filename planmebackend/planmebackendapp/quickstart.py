@@ -46,19 +46,47 @@ def student_information(students):
     return student_info
 
 
+...
+
+
 def task(course):
-    pass
+    course_data = {
+        "course_id": course["id"],
+        "course_name": course["name"],
+        "course_section": course.get("section"),
+        "course_description": course.get("description"),
+        "course_status": course.get("courseState"),
+    }
+    return course_data
 
 
-def subtask(course):
-    pass
+def subtask(service, course_id):
+    assignments = get_works(service, course_id).get("courseWork", [])
+
+    assignments_info = []
+    for assignment in assignments:
+        info = {
+            "course_id": course_id,
+            "title": assignment.get("title"),
+            "description": assignment.get("description"),
+            "due_date": str(assignment.get("dueDate", {}).get("year"))
+            + "-"
+            + str(assignment.get("dueDate", {}).get("month"))
+            + "-"
+            + str(assignment.get("dueDate", {}).get("day")),
+            "status": assignment.get("state"),
+            "max_points": assignment.get("maxPoints"),
+        }
+        assignments_info.append(info)
+    return assignments_info
 
 
 def main():
     service = initialize_api()
     courses = get_courses(service)
     for course in courses:
-        print(course)
+        print("Course Information:", task(course))
+        print("Assignments Information:", subtask(service, course["id"]))
         print()
 
 
