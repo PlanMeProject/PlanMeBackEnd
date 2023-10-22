@@ -50,18 +50,18 @@ jobs:
     env:
       DOCKER_BUILDKIT: 1
       COMPOSE_DOCKER_CLI_BUILD: 1
-      steps:
-        - name: Checkout Code Repository
-          uses: actions/checkout@v4
+    steps:
+      - name: Checkout Code Repository
+        uses: actions/checkout@v4
 
-        - name: Build the Stack
-          run: docker compose -f local.yml build
+      - name: Build the Stack
+        run: docker compose -f local.yml build
 
-        - name: Run DB Migrations
-          run: docker compose -f local.yml run --rm --env RAILWAY_NAME=${{ secrets.RAILWAY_NAME }} --env RAILWAY_USER=${{ secrets.RAILWAY_USER }} --env RAILWAY_PASSWORD=${{ secrets.RAILWAY_PASSWORD }} --env RAILWAY_HOST=${{ secrets.RAILWAY_HOST }} --env RAILWAY_PORT=${{ secrets.RAILWAY_PORT }} django python manage.py migrate
+      - name: Run DB Migrations
+        run: docker compose -f local.yml run --rm --env RAILWAY_NAME=${{ secrets.RAILWAY_NAME }} --env RAILWAY_USER=${{ secrets.RAILWAY_USER }} --env RAILWAY_PASSWORD=${{ secrets.RAILWAY_PASSWORD }} --env RAILWAY_HOST=${{ secrets.RAILWAY_HOST }} --env RAILWAY_PORT=${{ secrets.RAILWAY_PORT }} django python manage.py migrate
 
-        - name: Run API Tests
-          run: docker-compose -f local.yml run --rm --env RAILWAY_NAME=${{ secrets.RAILWAY_NAME }} --env RAILWAY_USER=${{ secrets.RAILWAY_USER }} --env RAILWAY_PASSWORD=${{ secrets.RAILWAY_PASSWORD }} --env RAILWAY_HOST=${{ secrets.RAILWAY_HOST }} --env RAILWAY_PORT=${{ secrets.RAILWAY_PORT }} django python manage.py test planmebackend/app/tests/
+      - name: Run API Tests
+        run: docker-compose -f local.yml run --rm --env RAILWAY_NAME=${{ secrets.RAILWAY_NAME }} --env RAILWAY_USER=${{ secrets.RAILWAY_USER }} --env RAILWAY_PASSWORD=${{ secrets.RAILWAY_PASSWORD }} --env RAILWAY_HOST=${{ secrets.RAILWAY_HOST }} --env RAILWAY_PORT=${{ secrets.RAILWAY_PORT }} django python manage.py test planmebackend/app/tests/
 
-        - name: Tear down the Stack
-          run: docker compose -f local.yml down
+      - name: Tear down the Stack
+        run: docker compose -f local.yml down
