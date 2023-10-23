@@ -1,10 +1,5 @@
 name: CI
 
-# Enable Buildkit and let compose use it to speed up image building
-env:
-  DOCKER_BUILDKIT: 1
-  COMPOSE_DOCKER_CLI_BUILD: 1
-
 on:
   pull_request:
     branches: ['master', 'main']
@@ -14,46 +9,20 @@ on:
     branches: ['master', 'main']
     paths-ignore: ['docs/**']
 
-concurrency:
-  group: ${{ github.head_ref || github.run_id }}
-  cancel-in-progress: true
-
 jobs:
-  linter:
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout Code Repository
-        uses: actions/checkout@v4
-
-      - name: Set up Python
-        uses: actions/setup-python@v4
-        with:
-          python-version: '3.11'
-
-#      # Consider using pre-commit.ci for open source project
-#      - name: Run pre-commit
-#        uses: pre-commit/action@v3.0.0
-
-#      # Run Flake8
-#      - name: Install Flake8 Dependencies
-#        run: pip install flake8 flake8-docstrings
-#
-#      - name: Run Flake8
-#        run: flake8 planmebackend/app
-#
-#      # Run Pylint
-#      - name: Install Pylint Dependencies
-#        run: pip install pylint
-#
-#      - name: Run Pylint
-#        run: pylint **/*.py
-
   pytest:
     runs-on: ubuntu-latest
-
     steps:
       - name: Checkout Code Repository
         uses: actions/checkout@v4
+
+      - name: Generate .env file
+        run: |
+          echo RAILWAY_NAME=${{ secrets.RAILWAY_NAME }} >> .env
+          echo RAILWAY_USER=${{ secrets.RAILWAY_USER }} >> .env
+          echo RAILWAY_PASSWORD=${{ secrets.RAILWAY_PASSWORD }} >> .env
+          echo RAILWAY_HOST=${{ secrets.RAILWAY_HOST }} >> .env
+          echo RAILWAY_PORT=${{ secrets.RAILWAY_PORT }} >> .env
 
       - name: Build the Stack
         run: docker compose -f local.yml build
@@ -62,7 +31,7 @@ jobs:
         run: docker compose -f local.yml run --rm django python manage.py migrate
 
       - name: Run API Tests
-        run: docker-compose -f local.yml run --rm django python manage.py test planmebackend/app/tests/
+        run: docker compose -f local.yml run --rm django python manage.py test planmebackend/app/tests/
 
       - name: Tear down the Stack
         run: docker compose -f local.yml down
