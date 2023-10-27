@@ -65,19 +65,31 @@ def subtask(service, course_id):
 
     assignments_info = []
     for assignment in assignments:
-        info = {
-            "course_id": course_id,
-            "title": assignment.get("title"),
-            "description": assignment.get("description"),
-            "due_date": str(assignment.get("dueDate", {}).get("year"))
-            + "-"
-            + str(assignment.get("dueDate", {}).get("month"))
-            + "-"
-            + str(assignment.get("dueDate", {}).get("day")),
-            "status": assignment.get("state"),
-            "max_points": assignment.get("maxPoints"),
-        }
-        assignments_info.append(info)
+        # Get student submissions for this assignment
+        submissions_results = (
+            service.courses()
+            .courseWork()
+            .studentSubmissions()
+            .list(courseId=course_id, courseWorkId=assignment["id"], userId="me")
+            .execute()
+        )
+        submissions = submissions_results.get("studentSubmissions", [])
+
+        # Check if the assignment is not done
+        if not any(submission.get("state") in ["TURNED_IN", "RETURNED"] for submission in submissions):
+            info = {
+                "course_id": course_id,
+                "title": assignment.get("title"),
+                "description": assignment.get("description"),
+                "due_date": str(assignment.get("dueDate", {}).get("year"))
+                + "-"
+                + str(assignment.get("dueDate", {}).get("month"))
+                + "-"
+                + str(assignment.get("dueDate", {}).get("day")),
+                "status": assignment.get("state"),
+                "max_points": assignment.get("maxPoints"),
+            }
+            assignments_info.append(info)
     return assignments_info
 
 
