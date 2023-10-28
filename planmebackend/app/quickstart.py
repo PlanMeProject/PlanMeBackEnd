@@ -3,10 +3,21 @@ from googleapiclient.discovery import build
 
 
 class GoogleClassroomAPI:
+    """A class to interact with Google Classroom API."""
+
     def __init__(self):
+        """
+        Initializes the GoogleClassroomAPI object with a service connection to Google Classroom.
+        """
         self.service = self.initialize_api()
 
     def initialize_api(self):
+        """
+        Initialize a connection to the Google Classroom API.
+
+        Returns:
+            service: A Resource object with methods for interacting with the service.
+        """
         scopes = [
             "https://www.googleapis.com/auth/classroom.courses.readonly",
             "https://www.googleapis.com/auth/classroom.rosters.readonly",
@@ -21,18 +32,51 @@ class GoogleClassroomAPI:
         return service
 
     def get_courses(self):
+        """
+        Retrieves a list of courses where the student is enrolled.
+
+        Returns:
+            List[Dict]: A list of course dictionaries.
+        """
         results = self.service.courses().list(studentId="me").execute()
         return results.get("courses", [])
 
     def get_students(self, course_id):
+        """
+        Retrieves a list of students enrolled in the specified course.
+
+        Parameters:
+            course_id (str): The ID of the course.
+
+        Returns:
+            List[Dict]: A list of student dictionaries.
+        """
         students_results = self.service.courses().students().list(courseId=course_id).execute()
         return students_results.get("students", [])
 
     def get_works(self, course_id):
+        """
+        Retrieves coursework for the specified course.
+
+        Parameters:
+            course_id (str): The ID of the course.
+
+        Returns:
+            Dict: A dictionary containing course works.
+        """
         coursework_results = self.service.courses().courseWork().list(courseId=course_id).execute()
         return coursework_results
 
     def student_information(self, students):
+        """
+        Formats student information.
+
+        Parameters:
+            students (List[Dict]): A list of student dictionaries.
+
+        Returns:
+            List[Dict]: A list of formatted student dictionaries.
+        """
         student_info = []
         for student in students:
             info = {
@@ -46,6 +90,16 @@ class GoogleClassroomAPI:
         return student_info
 
     def course_information(self, course):
+        """
+        Retrieves and formats course and assignment information for the specified course.
+
+        Parameters:
+            course (Dict): A dictionary containing course details.
+
+        Returns:
+            Tuple[Dict, List[Dict]]: A tuple containing a dictionary of course details
+            and a list of dictionaries of assignment details.
+        """
         # Course Data
         course_data = {
             "course_id": course["id"],
