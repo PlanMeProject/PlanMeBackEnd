@@ -32,12 +32,7 @@ class SubTaskTestCase(BaseTestCase):
         self.assertEqual(response.status_code, status.HTTP_200_OK)
 
     def test_create_subtask(self):
-        data = {
-            "data": {
-                "type": "SubTaskViewSet",
-                "attributes": {"title": "New SubTask", "status": "Pending", "task": self.task.id},
-            }
-        }
+        data = {"data": {"type": "SubTaskViewSet", "attributes": {"title": "New SubTask", "status": "Pending"}}}
         response = self.client.post(self.task_url, data, format="vnd.api+json")
         if response.status_code != status.HTTP_201_CREATED:
             print("Create SubTask Error: ", response.data)
