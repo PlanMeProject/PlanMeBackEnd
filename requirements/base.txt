@@ -15,8 +15,7 @@ django-extensions>=3.2.3
 drf-nested-routers>=0.90.0
 django-rest-framework-nested>=0.0.1
 # DRF-spectacular for api documentation
-drf-spectacular>=0.26.5  # https://github.com/tfranzel/drf-spectacular
-
+drf-spectacular==0.26.5  # https://github.com/tfranzel/drf-spectacular
 # Google Classroom API
 google-auth-oauthlib>=1.1.0
 google-api-python-client>=2.104.0
