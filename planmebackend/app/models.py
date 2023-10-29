@@ -25,10 +25,6 @@ class User(AbstractUser, Model):
 
     token = models.CharField(max_length=255)
 
-    def __str__(self):
-        """Unicode's representation of User."""
-        return self.id
-
 
 class Task(Model):
     """Model definition for Task."""

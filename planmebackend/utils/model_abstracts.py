@@ -13,3 +13,7 @@ class Model(models.Model):
         """Meta definition for Model."""
 
         abstract = True
+
+    def __str__(self):
+        """Unicode representation of Model."""
+        return str(self.id)
