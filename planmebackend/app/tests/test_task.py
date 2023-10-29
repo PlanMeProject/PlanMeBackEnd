@@ -20,13 +20,13 @@ class TaskTestCase(BaseTestCase):
         )
 
     def test_get_all_tasks(self):
-        """Test the api has user creation capability."""
-        response = self.client.get("/api/tasks/")
+        """Test the API for getting all tasks."""
+        response = self.client.get(f"/api/users/{self.user.id}/tasks/")
         self.assertEqual(response.status_code, status.HTTP_200_OK)
 
     def test_get_one_task(self):
-        """Test the api has user creation capability."""
-        response = self.client.get(f"/api/tasks/{self.task.id}/")
+        """Test the API for getting one task."""
+        response = self.client.get(f"/api/users/{self.user.id}/tasks/{self.task.id}/")
         self.assertEqual(response.status_code, status.HTTP_200_OK)
 
     def test_create_task(self):
@@ -39,15 +39,14 @@ class TaskTestCase(BaseTestCase):
                     "summarized_text": "New summarized text",
                     "due_date": "2022-12-31",
                     "status": "Pending",
-                    "user": self.user.id,
                 },
             }
         }
-        response = self.client.post("/api/tasks/", data, format="vnd.api+json")
+        response = self.client.post(f"/api/users/{self.user.id}/tasks/", data, format="vnd.api+json")
         self.assertEqual(response.status_code, status.HTTP_201_CREATED)
 
     def test_update_task(self):
-        """Test the api has task update capability."""
+        """Test the API for updating a task."""
         data = {
             "data": {
                 "type": "TaskViewSet",
@@ -58,14 +57,13 @@ class TaskTestCase(BaseTestCase):
                     "summarized_text": "Update summarized text",
                     "due_date": "2022-12-31",
                     "status": "Complete",
-                    "user": self.user.id,
                 },
             }
         }
-        response = self.client.put(f"/api/tasks/{self.task.id}/", data, format="vnd.api+json")
+        response = self.client.put(f"/api/users/{self.user.id}/tasks/{self.task.id}/", data, format="vnd.api+json")
         self.assertEqual(response.status_code, status.HTTP_200_OK)
 
     def test_delete_task(self):
-        """Test the api has user creation capability."""
-        response = self.client.delete(f"/api/tasks/{self.task.id}/")
+        """Test the API for deleting a task."""
+        response = self.client.delete(f"/api/users/{self.user.id}/tasks/{self.task.id}/")
         self.assertEqual(response.status_code, status.HTTP_204_NO_CONTENT)
