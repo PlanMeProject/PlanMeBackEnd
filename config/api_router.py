@@ -18,7 +18,7 @@ else:
 router.register("users", UserViewSet, basename="user")
 
 users_router = routers.NestedSimpleRouter(router, "users", lookup="user")
-users_router.register("tasks", TaskViewSet, basename="user-tasks")  # Tasks nested inside users
+users_router.register("tasks", TaskViewSet, basename="user-tasks")
 users_router.register("dashboard", DashboardViewSet, basename="user-dashboard")
 
 tasks_router = routers.NestedSimpleRouter(users_router, "tasks", lookup="task")
