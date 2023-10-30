@@ -67,21 +67,23 @@ class TaskViewSet(viewsets.ViewSet):
     ViewSet for handling Task-related operations.
     """
 
-    def list(self, request):
-        """List all Task objects."""
-        queryset = Task.objects.all()
+    def list(self, request, user_pk=None):
+        """List all Task objects for a specific user."""
+        queryset = Task.objects.filter(user_id=user_pk)
         serializer = TaskSerializer(queryset, many=True)
         return Response(serializer.data, status=status.HTTP_200_OK)
 
-    def create(self, request):
-        """Create a new Task object."""
-        serializer = TaskSerializer(data=request.data)
+    def create(self, request, user_pk=None):
+        """Create a new Task object for a specific user."""
+        data = request.data
+        data["user"] = user_pk
+        serializer = TaskSerializer(data=data)
         if serializer.is_valid():
             serializer.save()
             return Response(serializer.data, status=status.HTTP_201_CREATED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
-    def retrieve(self, request, pk=None):
+    def retrieve(self, request, pk=None, **kwargs):
         """Retrieve a Task object by ID."""
         try:
             task = Task.objects.get(id=pk)
@@ -90,19 +92,22 @@ class TaskViewSet(viewsets.ViewSet):
         serializer = TaskSerializer(task)
         return Response(serializer.data, status=status.HTTP_200_OK)
 
-    def update(self, request, pk=None):
+    def update(self, request, pk=None, user_pk=None, **kwargs):
         """Update an existing Task object by ID."""
         try:
             task = Task.objects.get(id=pk)
         except ObjectDoesNotExist:
             return Response({"error": "Task not found"}, status=status.HTTP_404_NOT_FOUND)
+        data = request.data
+        data["user"] = user_pk
+
         serializer = TaskSerializer(task, data=request.data)
         if serializer.is_valid():
             serializer.save()
             return Response(serializer.data, status=status.HTTP_200_OK)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
-    def destroy(self, request, pk=None):
+    def destroy(self, request, pk=None, **kwargs):
         """Delete a Task object by ID."""
         try:
             task = Task.objects.get(id=pk)
@@ -117,15 +122,17 @@ class SubTaskViewSet(viewsets.ViewSet):
     ViewSet for handling SubTask-related operations.
     """
 
-    def list(self, request, *args, **kwargs):
-        """List all SubTask objects."""
-        queryset = SubTask.objects.all()
+    def list(self, request, task_pk=None, **kwargs):
+        """List all SubTask objects for a specific task."""
+        queryset = SubTask.objects.filter(task_id=task_pk)
         serializer = SubTaskSerializer(queryset, many=True)
         return Response(serializer.data, status=status.HTTP_200_OK)
 
-    def create(self, request, *args, **kwargs):
-        """Create a new SubTask object."""
-        serializer = SubTaskSerializer(data=request.data)
+    def create(self, request, task_pk=None, **kwargs):
+        """Create a new SubTask object for a specific task."""
+        data = request.data
+        data["task"] = task_pk
+        serializer = SubTaskSerializer(data=data)
         if serializer.is_valid():
             serializer.save()
             return Response(serializer.data, status=status.HTTP_201_CREATED)

@@ -43,8 +43,17 @@ USE_TZ = True
 LOCALE_PATHS = [str(BASE_DIR / "locale")]
 
 # DATABASES
-DATABASES = {"default": env.db("DATABASE_URL")}
-DATABASES["default"]["ATOMIC_REQUESTS"] = True
+DATABASES = {
+    "default": {
+        "ENGINE": "django.db.backends.postgresql",
+        "NAME": "planmebackend",
+        "USER": "debug",
+        "PASSWORD": "debug",
+        "HOST": "postgres",
+        "PORT": 5432,
+        "ATOMIC_REQUESTS": True,
+    }
+}
 # ------------------------------------------------------------------------------
 # https://docs.djangoproject.com/en/dev/ref/settings/#databases
 #

@@ -19,33 +19,26 @@ class SubTaskTestCase(BaseTestCase):
             user=self.user,
         )
         self.subtask = SubTask.objects.create(title="Test SubTask", status="Pending", task=self.task)
-        self.task_url = f"/api/tasks/{self.task.id}/subtasks/"
+        # Change the URL here to match your new nested structure
+        self.task_url = f"/api/users/{self.user.id}/tasks/{self.task.id}/subtasks/"
 
+    # The rest of your test cases remain the same
     def test_get_all_subtasks(self):
-        """Test the api has subtask creation capability."""
         response = self.client.get(self.task_url)
         self.assertEqual(response.status_code, status.HTTP_200_OK)
 
     def test_get_one_subtask(self):
-        """Test the api has subtask creation capability."""
         response = self.client.get(f"{self.task_url}{self.subtask.id}/")
         self.assertEqual(response.status_code, status.HTTP_200_OK)
 
     def test_create_subtask(self):
-        """Test the api has subtask creation capability."""
-        data = {
-            "data": {
-                "type": "SubTaskViewSet",
-                "attributes": {"title": "New SubTask", "status": "Pending", "task": self.task.id},
-            }
-        }
+        data = {"data": {"type": "SubTaskViewSet", "attributes": {"title": "New SubTask", "status": "Pending"}}}
         response = self.client.post(self.task_url, data, format="vnd.api+json")
         if response.status_code != status.HTTP_201_CREATED:
             print("Create SubTask Error: ", response.data)
         self.assertEqual(response.status_code, status.HTTP_201_CREATED)
 
     def test_update_subtask(self):
-        """Test the api has subtask creation capability."""
         data = {
             "data": {
                 "type": "SubTaskViewSet",
@@ -59,6 +52,5 @@ class SubTaskTestCase(BaseTestCase):
         self.assertEqual(response.status_code, status.HTTP_200_OK)
 
     def test_delete_subtask(self):
-        """Test the api has subtask creation capability."""
         response = self.client.delete(f"{self.task_url}{self.subtask.id}/")
         self.assertEqual(response.status_code, status.HTTP_204_NO_CONTENT)
