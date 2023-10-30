@@ -58,6 +58,16 @@ DATABASES["default"]["ATOMIC_REQUESTS"] = True
 #         "PORT": env("RAILWAY_PORT", default="Not set"),
 #     }
 # }
+# DATABASES = {
+#     "default": {
+#         "ENGINE": "django.db.backends.postgresql",
+#         "NAME": "railway",
+#         "USER": "postgres",
+#         "PASSWORD": "C1N3ZuqDaHuRoQeYv4Au",
+#         "HOST": "containers-us-west-121.railway.app",
+#         "PORT": "7983"
+#     }
+# }
 
 # DATABASES["default"]["ATOMIC_REQUESTS"] = True
 # https://docs.djangoproject.com/en/stable/ref/settings/#std:setting-DEFAULT_AUTO_FIELD
