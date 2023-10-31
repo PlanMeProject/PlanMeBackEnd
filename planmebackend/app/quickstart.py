@@ -1,9 +1,19 @@
+from datetime import datetime
+
 from google_auth_oauthlib.flow import InstalledAppFlow
 from googleapiclient.discovery import build
 
 
 class GoogleClassroomAPI:
-    """A class to interact with Google Classroom API."""
+    """
+    A class to interact with Google Classroom API.
+
+    This class provides methods to authenticate with Google Classroom,
+    retrieve a list of courses, and fetch assignment details for specific courses.
+
+    Attributes:
+        service (Resource): A Google Classroom API service object.
+    """
 
     def __init__(self):
         """
@@ -41,19 +51,6 @@ class GoogleClassroomAPI:
         results = self.service.courses().list(studentId="me").execute()
         return results.get("courses", [])
 
-    def get_students(self, course_id):
-        """
-        Retrieves a list of students enrolled in the specified course.
-
-        Parameters:
-            course_id (str): The ID of the course.
-
-        Returns:
-            List[Dict]: A list of student dictionaries.
-        """
-        students_results = self.service.courses().students().list(courseId=course_id).execute()
-        return students_results.get("students", [])
-
     def get_works(self, course_id):
         """
         Retrieves coursework for the specified course.
@@ -67,27 +64,62 @@ class GoogleClassroomAPI:
         coursework_results = self.service.courses().courseWork().list(courseId=course_id).execute()
         return coursework_results
 
-    def student_information(self, students):
+    def get_student_submissions_batch(self, course_id, assignment_ids):
         """
-        Formats student information.
+        Fetch student submissions in batch for specific assignments.
 
         Parameters:
-            students (List[Dict]): A list of student dictionaries.
+            course_id (str): The ID of the course.
+            assignment_ids (List[str]): List of assignment IDs.
 
         Returns:
-            List[Dict]: A list of formatted student dictionaries.
+            Dict: A dictionary containing student submissions indexed by assignment IDs.
         """
-        student_info = []
-        for student in students:
-            info = {
-                "course_id": student["courseId"],
-                "user_id": student["userId"],
-                "name": student["profile"]["name"]["givenName"],
-                "family_name": student["profile"]["name"]["familyName"],
-                "full_name": student["profile"]["name"]["fullName"],
-            }
-            student_info.append(info)
-        return student_info
+        batch = self.service.new_batch_http_request()
+        student_submissions = {}
+
+        def callback(request_id, response, exception):
+            if exception is None:
+                student_submissions[request_id] = response
+
+        for assignment_id in assignment_ids:
+            req = (
+                self.service.courses()
+                .courseWork()
+                .studentSubmissions()
+                .list(courseId=course_id, courseWorkId=assignment_id, userId="me")
+            )
+            batch.add(req, callback=callback, request_id=assignment_id)
+
+        batch.execute()
+        return student_submissions
+
+    def assignments_for_specific_course(self, course_identifier):
+        """
+        Retrieves and formats course and assignment information based on a course identifier.
+
+        Parameters:
+            course_identifier (str): Identifier (name or ID) of the course.
+
+        Returns:
+            Tuple[Dict, List[Dict]]: A tuple containing a dictionary of course details
+            and a list of dictionaries of assignment details.
+        """
+        courses = self.get_courses()
+        course = next(
+            (
+                course
+                for course in courses
+                if course.get("name") == course_identifier or course.get("id") == course_identifier
+            ),
+            None,
+        )
+
+        if not course:
+            print(f"No course found with identifier {course_identifier}")
+            return None, None
+
+        return self.course_information(course)
 
     def course_information(self, course):
         """
@@ -111,41 +143,44 @@ class GoogleClassroomAPI:
 
         # Assignments Information
         assignments = self.get_works(course_data["course_id"]).get("courseWork", [])
+        assignment_ids = [assignment["id"] for assignment in assignments]
+        student_submissions = self.get_student_submissions_batch(course_data["course_id"], assignment_ids)
+
         assignments_info = []
-
         for assignment in assignments:
-            submissions_results = (
-                self.service.courses()
-                .courseWork()
-                .studentSubmissions()
-                .list(courseId=course_data["course_id"], courseWorkId=assignment["id"], userId="me")
-                .execute()
-            )
-            submissions = submissions_results.get("studentSubmissions", [])
+            submissions = student_submissions.get(assignment["id"], {}).get("studentSubmissions", [])
 
-            if not any(submission.get("state") in ["TURNED_IN", "RETURNED"] for submission in submissions):
-                info = {
-                    "course_id": course_data["course_id"],
-                    "title": assignment.get("title"),
-                    "description": assignment.get("description"),
-                    "due_date": "{}-{}-{}".format(
-                        assignment.get("dueDate", {}).get("year"),
-                        assignment.get("dueDate", {}).get("month"),
-                        assignment.get("dueDate", {}).get("day"),
-                    ),
-                    "status": assignment.get("state"),
-                    "max_points": assignment.get("maxPoints"),
-                }
-                assignments_info.append(info)
+            not_done_submissions = [s for s in submissions if s.get("state") not in ["TURNED_IN", "RETURNED"]]
+
+            if not not_done_submissions:
+                continue
+
+            due_date = assignment.get("dueDate")
+            if due_date:
+                date_obj = datetime(due_date["year"], due_date["month"], due_date["day"])
+                due_date_str = date_obj.strftime("%Y-%m-%d")
+            else:
+                due_date_str = None
+
+            info = {
+                "course_id": course_data["course_id"],
+                "title": assignment.get("title"),
+                "description": assignment.get("description"),
+                "due_date": due_date_str,
+                "status": assignment.get("state"),
+                "max_points": assignment.get("maxPoints"),
+            }
+            assignments_info.append(info)
 
         return course_data, assignments_info
 
 
 if __name__ == "__main__":
     api = GoogleClassroomAPI()
-    courses = api.get_courses()
-    for course in courses:
-        course_info, assignments_info = api.course_information(course)
+    course_name = "219241 ISP"
+    course_info, assignments_info = api.assignments_for_specific_course(course_name)
+
+    if course_info and assignments_info:
         print("Course Information:", course_info)
         print("Assignments Information:", assignments_info)
         print()
