@@ -1,6 +1,7 @@
 # Static Files
 whitenoise>=6.6.0  # https://github.com/evansd/whitenoise
-
+argon2-cffi>=23.1.0
+argon2-cffi-bindings>=21.2.0
 # Django
 # ------------------------------------------------------------------------------
 django>=4.2.6  # pyup: < 5.0  # https://www.djangoproject.com/
@@ -19,7 +20,7 @@ django-extensions>=3.2.3
 django-allauth>=0.57.0
 django-redis>=5.4.0
 # DRF-spectacular for api documentation
-drf-spectacular==0.26.5  # https://github.com/tfranzel/drf-spectacular
+drf-spectacular>=0.26.5  # https://github.com/tfranzel/drf-spectacular
 # Google Classroom API
 google-auth-oauthlib>=1.1.0
 google-api-python-client>=2.104.0
