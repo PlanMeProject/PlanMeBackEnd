@@ -43,7 +43,7 @@ class SubTaskTestCase(BaseTestCase):
             "data": {
                 "type": "SubTaskViewSet",
                 "id": str(self.subtask.id),
-                "attributes": {"title": "Updated SubTask", "status": "Complete", "task": self.task.id},
+                "attributes": {"title": "Updated SubTask", "status": "Complete"},
             }
         }
         response = self.client.put(f"{self.task_url}{self.subtask.id}/", data, format="vnd.api+json")

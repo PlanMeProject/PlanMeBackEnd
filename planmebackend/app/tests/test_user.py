@@ -34,7 +34,7 @@ class UserTestCase(BaseTestCase):
             "data": {
                 "type": "UserViewSet",
                 "id": str(self.user.id),
-                "attributes": {"username": "UpdatedUser", "password": "UpdatedPassword", "token": self.token.key},
+                "attributes": {"username": "UpdatedUser", "password": "UpdatedPassword"},
             }
         }
         response = self.client.put(f"/api/users/{self.user.id}/", data, format="vnd.api+json")

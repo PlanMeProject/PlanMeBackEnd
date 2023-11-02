@@ -46,7 +46,7 @@ class UserViewSet(viewsets.ViewSet):
             user = User.objects.get(id=pk)
         except ObjectDoesNotExist:
             return Response({"error": "User not found"}, status=status.HTTP_404_NOT_FOUND)
-        serializer = UserSerializer(user, data=request.data)
+        serializer = UserSerializer(user, data=request.data, partial=True)
         if serializer.is_valid():
             serializer.save()
             return Response(serializer.data, status=status.HTTP_200_OK)
@@ -101,7 +101,7 @@ class TaskViewSet(viewsets.ViewSet):
         data = request.data
         data["user"] = user_pk
 
-        serializer = TaskSerializer(task, data=request.data)
+        serializer = TaskSerializer(task, data=request.data, partial=True)
         if serializer.is_valid():
             serializer.save()
             return Response(serializer.data, status=status.HTTP_200_OK)
@@ -153,7 +153,7 @@ class SubTaskViewSet(viewsets.ViewSet):
             subtask = SubTask.objects.get(id=pk)
         except ObjectDoesNotExist:
             return Response({"error": "SubTask not found"}, status=status.HTTP_404_NOT_FOUND)
-        serializer = SubTaskSerializer(subtask, data=request.data)
+        serializer = SubTaskSerializer(subtask, data=request.data, partial=True)
         if serializer.is_valid():
             serializer.save()
             return Response(serializer.data, status=status.HTTP_200_OK)
@@ -199,7 +199,7 @@ class DashboardViewSet(viewsets.ViewSet):
             dashboard = Dashboard.objects.get(id=pk)
         except ObjectDoesNotExist:
             return Response({"error": "Dashboard not found"}, status=status.HTTP_404_NOT_FOUND)
-        serializer = DashboardSerializer(dashboard, data=request.data)
+        serializer = DashboardSerializer(dashboard, data=request.data, partial=True)
         if serializer.is_valid():
             serializer.save()
             return Response(serializer.data, status=status.HTTP_200_OK)
@@ -253,7 +253,7 @@ class DataVisualizationViewSet(viewsets.ViewSet):
         except ObjectDoesNotExist:
             return Response({"error": "DataVisualization not found"}, status=status.HTTP_404_NOT_FOUND)
 
-        serializer = DataVisualizationSerializer(visualization, data=request.data)
+        serializer = DataVisualizationSerializer(visualization, data=request.data, partial=True)
         if serializer.is_valid():
             serializer.save()
             return Response(serializer.data, status=status.HTTP_200_OK)
