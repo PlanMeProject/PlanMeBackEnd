@@ -10,10 +10,6 @@ class BaseTestCase(APITestCase):
     def setUp(self):
         """Define the test client and other test variables."""
         self.user = User.objects.create_user(username="testuser", token="testtoken")
-
-        self.token, created = Token.objects.get_or_create(user=self.user)
-        self.client = APIClient()
-        self.client.credentials(HTTP_AUTHORIZATION="Token " + self.token.key)
         self.task = Task.objects.create(
             title="Test Task",
             description="This is a test description",
@@ -23,3 +19,9 @@ class BaseTestCase(APITestCase):
             user=self.user,
         )
         self.subtask = SubTask.objects.create(title="Test SubTask", status="Pending", task=self.task)
+        self.user_url = "/api/users/"
+        self.task_url = f"/api/users/{self.user.id}/tasks/"
+        self.subtask_url = f"/api/users/{self.user.id}/tasks/{self.task.id}/subtasks/"
+        self.token, created = Token.objects.get_or_create(user=self.user)
+        self.client = APIClient()
+        self.client.credentials(HTTP_AUTHORIZATION="Token " + self.token.key)
