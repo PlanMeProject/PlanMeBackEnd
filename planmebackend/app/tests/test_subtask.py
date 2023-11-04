@@ -6,10 +6,6 @@ from planmebackend.utils.setupTest import BaseTestCase
 class SubTaskTestCase(BaseTestCase):
     """This class defines the test suite for the SubTask model."""
 
-    def setUp(self):
-        """Define the test client and other test variables."""
-        super().setUp()
-
     def test_get_all_subtasks(self):
         response = self.client.get(self.subtask_url)
         self.assertEqual(response.status_code, status.HTTP_200_OK)

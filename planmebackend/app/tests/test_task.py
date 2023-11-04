@@ -6,10 +6,6 @@ from planmebackend.utils.setupTest import BaseTestCase
 class TaskTestCase(BaseTestCase):
     """This class defines the test suite for the user model."""
 
-    def setUp(self):
-        """Define the test client and other test variables."""
-        super().setUp()
-
     def test_get_all_tasks(self):
         """Test the API for getting all tasks."""
         response = self.client.get(self.task_url)
