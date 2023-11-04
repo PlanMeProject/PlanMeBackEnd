@@ -1,6 +1,6 @@
 from rest_framework import status
 
-from planmebackend.app.tests.setup import BaseTestCase
+from planmebackend.utils.setup import BaseTestCase
 
 
 class UserTestCase(BaseTestCase):

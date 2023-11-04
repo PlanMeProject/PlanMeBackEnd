@@ -1,7 +1,6 @@
 from rest_framework import status
 
-from planmebackend.app.models import Task
-from planmebackend.app.tests.setup import BaseTestCase
+from planmebackend.utils.setup import BaseTestCase
 
 
 class TaskTestCase(BaseTestCase):
@@ -10,14 +9,6 @@ class TaskTestCase(BaseTestCase):
     def setUp(self):
         """Define the test client and other test variables."""
         super().setUp()
-        self.task = Task.objects.create(
-            title="Test Task",
-            description="This is a test description",
-            summarized_text="Summarized text",
-            due_date="2022-12-31",
-            status="Pending",
-            user=self.user,
-        )
 
     def test_get_all_tasks(self):
         """Test the API for getting all tasks."""

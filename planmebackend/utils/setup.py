@@ -1,7 +1,7 @@
 from rest_framework.authtoken.models import Token
 from rest_framework.test import APIClient, APITestCase
 
-from planmebackend.app.models import User
+from planmebackend.app.models import SubTask, Task, User
 
 
 class BaseTestCase(APITestCase):
@@ -14,3 +14,12 @@ class BaseTestCase(APITestCase):
         self.token, created = Token.objects.get_or_create(user=self.user)
         self.client = APIClient()
         self.client.credentials(HTTP_AUTHORIZATION="Token " + self.token.key)
+        self.task = Task.objects.create(
+            title="Test Task",
+            description="This is a test description",
+            summarized_text="Summarized text",
+            due_date="2022-12-31",
+            status="Pending",
+            user=self.user,
+        )
+        self.subtask = SubTask.objects.create(title="Test SubTask", status="Pending", task=self.task)

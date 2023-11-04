@@ -1,7 +1,6 @@
 from rest_framework import status
 
-from planmebackend.app.models import SubTask, Task
-from planmebackend.app.tests.setup import BaseTestCase
+from planmebackend.utils.setup import BaseTestCase
 
 
 class SubTaskTestCase(BaseTestCase):
@@ -10,19 +9,8 @@ class SubTaskTestCase(BaseTestCase):
     def setUp(self):
         """Define the test client and other test variables."""
         super().setUp()
-        self.task = Task.objects.create(
-            title="Test Task",
-            description="This is a test description",
-            summarized_text="Summarized text",
-            due_date="2022-12-31",
-            status="Pending",
-            user=self.user,
-        )
-        self.subtask = SubTask.objects.create(title="Test SubTask", status="Pending", task=self.task)
-        # Change the URL here to match your new nested structure
         self.task_url = f"/api/users/{self.user.id}/tasks/{self.task.id}/subtasks/"
 
-    # The rest of your test cases remain the same
     def test_get_all_subtasks(self):
         response = self.client.get(self.task_url)
         self.assertEqual(response.status_code, status.HTTP_200_OK)
