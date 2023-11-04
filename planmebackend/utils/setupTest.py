@@ -22,7 +22,8 @@ class BaseTestCase(APITestCase):
         self.user_url = "/api/users/"
         self.task_url = f"/api/users/{self.user.id}/tasks/"
         self.subtask_url = f"/api/users/{self.user.id}/tasks/{self.task.id}/subtasks/"
-        self.nlp_url = "/api/nlp/"
+        self.tts_url = "/api/tts/"
+        self.summarize_url = "/api/summarize/"
         self.token, created = Token.objects.get_or_create(user=self.user)
         self.client = APIClient()
         self.client.credentials(HTTP_AUTHORIZATION="Token " + self.token.key)

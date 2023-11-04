@@ -20,7 +20,7 @@ class NLPTestCase(BaseTestCase):
             }
         }
 
-        response = self.client.post(self.nlp_url, data, format="vnd.api+json")
+        response = self.client.post(self.tts_url, data, format="vnd.api+json")
         if response.status_code != status.HTTP_201_CREATED:
             logging.error("Create SubTask Error: %s", response.data)
         self.assertEqual(status.HTTP_201_CREATED, response.status_code)
@@ -36,7 +36,7 @@ class NLPTestCase(BaseTestCase):
             }
         }
 
-        response = self.client.post(self.nlp_url, data, format="vnd.api+json")
+        response = self.client.post(self.tts_url, data, format="vnd.api+json")
         if response.status_code != status.HTTP_201_CREATED:
             logging.error("Create SubTask Error: %s", response.data)
         self.assertEqual(status.HTTP_201_CREATED, response.status_code)

@@ -9,7 +9,7 @@ from planmebackend.app.views import (
     TaskViewSet,
     UserViewSet,
 )
-from planmebackend.nlp.views import NLPInferenceViewSet
+from planmebackend.nlp.views import SummarizeViewSet, TTSViewSet
 
 if settings.DEBUG:
     router = DefaultRouter()
@@ -17,7 +17,8 @@ else:
     router = SimpleRouter()
 
 router.register("users", UserViewSet, basename="user")
-router.register("nlp", NLPInferenceViewSet, basename="nlp")
+router.register("tts", TTSViewSet, basename="tts")
+router.register("summarize", SummarizeViewSet, basename="summarize")
 
 users_router = routers.NestedSimpleRouter(router, "users", lookup="user")
 users_router.register("tasks", TaskViewSet, basename="user-tasks")

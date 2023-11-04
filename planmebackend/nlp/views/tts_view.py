@@ -7,7 +7,7 @@ from planmebackend.app.serializers import SubTaskSerializer
 from planmebackend.nlp.apps import NlpConfig
 
 
-class NLPInferenceViewSet(viewsets.ViewSet):
+class TTSViewSet(viewsets.ViewSet):
     """
     ViewSet to process text and update SubTask entries in the database.
     """
