@@ -26,7 +26,8 @@ class TTSViewSet(viewsets.ViewSet):
             if not subtask_description:
                 continue
 
-            subtask_data = {"task": task_id, "title": subtask_description, "status": "Todo"}
+            subtask_data = {"type": "SubTaskViewSet", "task": task_id, "title": subtask_description, "status": "Todo"}
+
             subtask_serializer = SubTaskSerializer(data=subtask_data)
 
             if subtask_serializer.is_valid():
