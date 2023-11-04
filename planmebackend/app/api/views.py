@@ -2,14 +2,14 @@ from django.core.exceptions import ObjectDoesNotExist
 from rest_framework import status, viewsets
 from rest_framework.response import Response
 
-from ..models import Dashboard, DataVisualization, SubTask, Task, User
-from .serializers import (
+from planmebackend.app.api.serializers import (
     DashboardSerializer,
     DataVisualizationSerializer,
     SubTaskSerializer,
     TaskSerializer,
     UserSerializer,
 )
+from planmebackend.app.models import Dashboard, DataVisualization, SubTask, Task, User
 
 
 class UserViewSet(viewsets.ViewSet):

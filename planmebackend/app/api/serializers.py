@@ -1,7 +1,7 @@
 """Serializers for the api app."""
 from rest_framework import serializers
 
-from ..models import Dashboard, DataVisualization, SubTask, Task, User
+from planmebackend.app.models import Dashboard, DataVisualization, SubTask, Task, User
 
 
 class UserSerializer(serializers.ModelSerializer):
