@@ -20,20 +20,25 @@ class TTSViewSet(viewsets.ViewSet):
         SubTask.objects.filter(task_id=task_id).delete()
         new_subtasks = []
 
-        for subtask_description in generated_subtasks:
-            subtask_description = subtask_description.strip()
+        for subtask_title in generated_subtasks:
+            subtask_title = subtask_title.strip()
 
-            if not subtask_description:
+            if not subtask_title:
                 continue
 
-            subtask_data = {"type": "SubTaskViewSet", "task": task_id, "title": subtask_description, "status": "Todo"}
+            data = {"title": subtask_title, "task": task_id, "status": "Todo"}
 
-            subtask_serializer = SubTaskSerializer(data=subtask_data)
+            subtask_serializer = SubTaskSerializer(data=data)
 
             if subtask_serializer.is_valid():
-                subtask_serializer.save()
-                new_subtasks.append(subtask_serializer.data)
-
+                subtask_instance = subtask_serializer.save()
+                subtask_data = {
+                    "type": "SubTaskViewSet",
+                    "id": str(subtask_instance.id),
+                    "attributes": {"title": subtask_instance.title, "status": subtask_instance.status},
+                    "relationships": {"task": {"data": {"type": "Task", "id": str(subtask_instance.task.id)}}},
+                }
+                new_subtasks.append(subtask_data)
             else:
                 return Response(subtask_serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
