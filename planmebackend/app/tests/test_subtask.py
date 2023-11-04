@@ -8,18 +8,18 @@ class SubTaskTestCase(BaseTestCase):
 
     def test_get_all_subtasks(self):
         response = self.client.get(self.subtask_url)
-        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(status.HTTP_200_OK, response.status_code)
 
     def test_get_one_subtask(self):
         response = self.client.get(f"{self.subtask_url}{self.subtask.id}/")
-        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(status.HTTP_200_OK, response.status_code)
 
     def test_create_subtask(self):
         data = {"data": {"type": "SubTaskViewSet", "attributes": {"title": "New SubTask", "status": "Pending"}}}
         response = self.client.post(self.subtask_url, data, format="vnd.api+json")
         if response.status_code != status.HTTP_201_CREATED:
             print("Create SubTask Error: ", response.data)
-        self.assertEqual(response.status_code, status.HTTP_201_CREATED)
+        self.assertEqual(status.HTTP_201_CREATED, response.status_code)
 
     def test_update_subtask(self):
         data = {
@@ -32,8 +32,8 @@ class SubTaskTestCase(BaseTestCase):
         response = self.client.put(f"{self.subtask_url}{self.subtask.id}/", data, format="vnd.api+json")
         if response.status_code != status.HTTP_200_OK:
             print("Update SubTask Error: ", response.data)
-        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(status.HTTP_200_OK, response.status_code)
 
     def test_delete_subtask(self):
         response = self.client.delete(f"{self.subtask_url}{self.subtask.id}/")
-        self.assertEqual(response.status_code, status.HTTP_204_NO_CONTENT)
+        self.assertEqual(status.HTTP_204_NO_CONTENT, response.status_code)

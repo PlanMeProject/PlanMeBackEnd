@@ -9,12 +9,12 @@ class TaskTestCase(BaseTestCase):
     def test_get_all_tasks(self):
         """Test the API for getting all tasks."""
         response = self.client.get(self.task_url)
-        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(status.HTTP_200_OK, response.status_code)
 
     def test_get_one_task(self):
         """Test the API for getting one task."""
         response = self.client.get(f"{self.task_url}{self.task.id}/")
-        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(status.HTTP_200_OK, response.status_code)
 
     def test_create_task(self):
         data = {
@@ -30,7 +30,7 @@ class TaskTestCase(BaseTestCase):
             }
         }
         response = self.client.post(self.task_url, data, format="vnd.api+json")
-        self.assertEqual(response.status_code, status.HTTP_201_CREATED)
+        self.assertEqual(status.HTTP_201_CREATED, response.status_code)
 
     def test_update_task(self):
         """Test the API for updating a task."""
@@ -48,9 +48,9 @@ class TaskTestCase(BaseTestCase):
             }
         }
         response = self.client.put(f"{self.task_url}{self.task.id}/", data, format="vnd.api+json")
-        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(status.HTTP_200_OK, response.status_code)
 
     def test_delete_task(self):
         """Test the API for deleting a task."""
         response = self.client.delete(f"{self.task_url}{self.task.id}/")
-        self.assertEqual(response.status_code, status.HTTP_204_NO_CONTENT)
+        self.assertEqual(status.HTTP_204_NO_CONTENT, response.status_code)
