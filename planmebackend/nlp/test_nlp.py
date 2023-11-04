@@ -1,3 +1,5 @@
+import logging
+
 from rest_framework import status
 
 from planmebackend.utils.setupTest import BaseTestCase
@@ -12,5 +14,7 @@ class NLPTestCase(BaseTestCase):
             }
         }
 
-        response = self.client.post(self.subtask_url, data)
+        response = self.client.post(self.subtask_url, data, format="vnd.api+json")
+        if response.status_code != status.HTTP_201_CREATED:
+            logging.error("Create SubTask Error: %s", response.data)
         self.assertEqual(status.HTTP_201_CREATED, response.status_code)
