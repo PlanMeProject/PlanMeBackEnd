@@ -2,8 +2,8 @@ import torch
 from rest_framework import status, viewsets
 from rest_framework.response import Response
 
-from planmebackend.app.api.serializers import SubTaskSerializer
 from planmebackend.app.models import SubTask
+from planmebackend.app.serializers import SubTaskSerializer
 from planmebackend.nlp.apps import NlpConfig
 
 
