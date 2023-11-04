@@ -25,7 +25,6 @@ class UserTestCase(BaseTestCase):
             }
         }
         response = self.client.post(self.user_url, data, format="vnd.api+json")
-        print("Create User Response:", response.content)  # Debugging line
         self.assertEqual(status.HTTP_201_CREATED, response.status_code)
 
     def test_update_user(self):
@@ -38,7 +37,6 @@ class UserTestCase(BaseTestCase):
             }
         }
         response = self.client.put(f"{self.user_url}{self.user.id}/", data, format="vnd.api+json")
-        print("Update User Response:", response.content)  # Debugging line
         self.assertEqual(status.HTTP_200_OK, response.status_code)
 
     def test_delete_user(self):

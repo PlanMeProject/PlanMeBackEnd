@@ -1,3 +1,5 @@
+import logging
+
 from rest_framework import status
 
 from planmebackend.utils.setupTest import BaseTestCase
@@ -30,6 +32,8 @@ class TaskTestCase(BaseTestCase):
             }
         }
         response = self.client.post(self.task_url, data, format="vnd.api+json")
+        if response.status_code != status.HTTP_201_CREATED:
+            logging.error("Create Task Error: ", response.data)
         self.assertEqual(status.HTTP_201_CREATED, response.status_code)
 
     def test_update_task(self):
@@ -48,6 +52,8 @@ class TaskTestCase(BaseTestCase):
             }
         }
         response = self.client.put(f"{self.task_url}{self.task.id}/", data, format="vnd.api+json")
+        if response.status_code != status.HTTP_200_OK:
+            logging.error("Update Task Error: ", response.data)
         self.assertEqual(status.HTTP_200_OK, response.status_code)
 
     def test_delete_task(self):

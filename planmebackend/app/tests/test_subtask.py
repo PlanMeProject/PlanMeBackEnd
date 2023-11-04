@@ -1,3 +1,5 @@
+import logging
+
 from rest_framework import status
 
 from planmebackend.utils.setupTest import BaseTestCase
@@ -18,7 +20,7 @@ class SubTaskTestCase(BaseTestCase):
         data = {"data": {"type": "SubTaskViewSet", "attributes": {"title": "New SubTask", "status": "Pending"}}}
         response = self.client.post(self.subtask_url, data, format="vnd.api+json")
         if response.status_code != status.HTTP_201_CREATED:
-            print("Create SubTask Error: ", response.data)
+            logging.error("Create SubTask Error: ", response.data)
         self.assertEqual(status.HTTP_201_CREATED, response.status_code)
 
     def test_update_subtask(self):
@@ -31,7 +33,7 @@ class SubTaskTestCase(BaseTestCase):
         }
         response = self.client.put(f"{self.subtask_url}{self.subtask.id}/", data, format="vnd.api+json")
         if response.status_code != status.HTTP_200_OK:
-            print("Update SubTask Error: ", response.data)
+            logging.error("Update SubTask Error: ", response.data)
         self.assertEqual(status.HTTP_200_OK, response.status_code)
 
     def test_delete_subtask(self):
