@@ -26,15 +26,9 @@ jobs:
       - name: Checkout Code Repository
         uses: actions/checkout@v4
 
-      - name: Generate .env file
-        run: |
-          echo RAILWAY_NAME=${{ secrets.RAILWAY_NAME }} >> .env
-          echo RAILWAY_USER=${{ secrets.RAILWAY_USER }} >> .env
-          echo RAILWAY_PASSWORD=${{ secrets.RAILWAY_PASSWORD }} >> .env
-          echo RAILWAY_HOST=${{ secrets.RAILWAY_HOST }} >> .env
-          echo RAILWAY_PORT=${{ secrets.RAILWAY_PORT }} >> .env
-
       - name: Build the Stack
+        env:
+          DOCKER_BUILDKIT: 1
         run: docker compose -f local.yml build
 
       - name: Run DB Migrations
