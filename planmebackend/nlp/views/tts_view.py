@@ -1,10 +1,10 @@
 import torch
-from django.apps import apps
 from rest_framework import status, viewsets
 from rest_framework.response import Response
 
 from planmebackend.app.models import SubTask
 from planmebackend.app.serializers import SubTaskSerializer
+from planmebackend.nlp.apps import NlpConfig
 
 
 class TTSViewSet(viewsets.ViewSet):
@@ -46,9 +46,8 @@ class TTSViewSet(viewsets.ViewSet):
 
     @staticmethod
     def perform_inference(input_text):
-        nlp_config = apps.get_app_config("nlp")
-        model = nlp_config.get_tts_model()
-        tokenizer = nlp_config.get_tokenizer()
+        model = NlpConfig.tts_model
+        tokenizer = NlpConfig.tokenizer
         model.eval()
         input_tensor = tokenizer.encode(input_text, return_tensors="pt").to("cpu")
 
