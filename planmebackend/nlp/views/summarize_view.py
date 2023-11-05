@@ -15,7 +15,7 @@ class SummarizeViewSet(viewsets.ViewSet):
         task_id = request.data.get("task_id")
 
         if not input_text:
-            return Response({"data": "No text provided"}, status=status.HTTP_400_BAD_REQUEST)
+            return Response({"error": "No text provided"}, status=status.HTTP_400_BAD_REQUEST)
 
         task = get_object_or_404(Task, id=task_id)
 
