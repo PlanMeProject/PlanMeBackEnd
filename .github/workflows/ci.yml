@@ -8,34 +8,37 @@ on:
   push:
     branches: ['master', 'main']
     paths-ignore: ['docs/**']
-
 jobs:
   build:
     runs-on: ubuntu-latest
     steps:
-      - name: Cleanup Disk Space
-        run: |
-          sudo apt-get clean
-          sudo rm -rf /usr/local/share/.cache
-          sudo rm -rf /usr/share/dotnet
-          sudo rm -rf /opt/ghc
-
-  pytest:
-    runs-on: ubuntu-latest
-    steps:
       - name: Checkout Code Repository
         uses: actions/checkout@v4
-
       - name: Build the Stack
         env:
           DOCKER_BUILDKIT: 1
-        run: docker compose -f local.yml build
+        run: docker-compose -f local.yml build
+    outputs:
+      image-hash: ${{ steps.build.outputs.digest }}
 
+  migrate:
+    needs: build
+    runs-on: ubuntu-latest
+    steps:
       - name: Run DB Migrations
-        run: docker compose -f local.yml run --rm django python manage.py migrate
+        run: docker-compose -f local.yml run --rm django python manage.py migrate
 
+  test:
+    needs: migrate
+    runs-on: ubuntu-latest
+    steps:
       - name: Run API Tests
-        run: docker compose -f local.yml run --rm django python manage.py test planmebackend/app/tests/
+        run: docker-compose -f local.yml run --rm django pytest -vv
 
+  teardown:
+    needs: test
+    runs-on: ubuntu-latest
+    if: always()
+    steps:
       - name: Tear down the Stack
-        run: docker compose -f local.yml down
+        run: docker-compose -f local.yml down
