@@ -12,6 +12,9 @@ class SummarizeViewSet(viewsets.ViewSet):
         input_text = request.data.get("text")
         task_id = request.data.get("task_id")
 
+        if not input_text:
+            return Response({"error": "No text provided"}, status=status.HTTP_400_BAD_REQUEST)
+
         try:
             task = Task.objects.get(id=task_id)
 
@@ -24,11 +27,10 @@ class SummarizeViewSet(viewsets.ViewSet):
         }
         task_serializer = TaskSerializer(task, data=task_data, partial=True)
 
-        if task_serializer.is_valid():
-            task_serializer.save()
-
-        else:
+        if not task_serializer.is_valid():
             return Response(task_serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+        task_serializer.save()
 
         return Response(task_serializer.data, status=status.HTTP_201_CREATED)
 
