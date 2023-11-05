@@ -1,7 +1,7 @@
 """Serializers for the api app."""
 from rest_framework import serializers
 
-from planmebackend.app.models import Dashboard, DataVisualization, SubTask, Task, User
+from planmebackend.app.models import SubTask, Task, User
 
 
 class UserSerializer(serializers.ModelSerializer):
@@ -31,24 +31,4 @@ class SubTaskSerializer(serializers.ModelSerializer):
         """Meta definition for SubTask."""
 
         model = SubTask
-        fields = "__all__"
-
-
-class DashboardSerializer(serializers.ModelSerializer):
-    """Serializer definition for Dashboard."""
-
-    class Meta:
-        """Meta definition for Dashboard."""
-
-        model = Dashboard
-        fields = "__all__"
-
-
-class DataVisualizationSerializer(serializers.ModelSerializer):
-    """Serializer definition for DataVisualization."""
-
-    class Meta:
-        """Meta definition for DataVisualization."""
-
-        model = DataVisualization
         fields = "__all__"
