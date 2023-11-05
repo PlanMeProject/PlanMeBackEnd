@@ -10,6 +10,16 @@ on:
     paths-ignore: ['docs/**']
 
 jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Cleanup Disk Space
+        run: |
+          sudo apt-get clean
+          sudo rm -rf /usr/local/share/.cache
+          sudo rm -rf /usr/share/dotnet
+          sudo rm -rf /opt/ghc
+
   pytest:
     runs-on: ubuntu-latest
     steps:
