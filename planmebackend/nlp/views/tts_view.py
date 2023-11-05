@@ -1,4 +1,5 @@
 import torch
+from django.db import transaction
 from rest_framework import status, viewsets
 from rest_framework.response import Response
 
@@ -17,32 +18,21 @@ class TTSViewSet(viewsets.ViewSet):
         task_id = request.data.get("task_id")
         generated_text = self.perform_inference(input_text)
         generated_subtasks = generated_text.split(",")
-        SubTask.objects.filter(task_id=task_id).delete()
-        new_subtasks = []
+        subtask_data_list = []
 
         for subtask_title in generated_subtasks:
             subtask_title = subtask_title.strip()
+            if subtask_title:
+                subtask_data_list.append(SubTask(title=subtask_title, task_id=task_id, status="Todo"))
 
-            if not subtask_title:
-                continue
+        with transaction.atomic():
+            SubTask.objects.filter(task_id=task_id).delete()
 
-            data = {"title": subtask_title, "task": task_id, "status": "Todo"}
+            new_subtasks_instances = SubTask.objects.bulk_create(subtask_data_list)
 
-            subtask_serializer = SubTaskSerializer(data=data)
+        new_subtasks_data = SubTaskSerializer(new_subtasks_instances, many=True).data
 
-            if subtask_serializer.is_valid():
-                subtask_instance = subtask_serializer.save()
-                subtask_data = {
-                    "type": "SubTaskViewSet",
-                    "id": str(subtask_instance.id),
-                    "attributes": {"title": subtask_instance.title, "status": subtask_instance.status},
-                    "relationships": {"task": {"data": {"type": "Task", "id": str(subtask_instance.task.id)}}},
-                }
-                new_subtasks.append(subtask_data)
-            else:
-                return Response(subtask_serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-
-        return Response(new_subtasks, status=status.HTTP_201_CREATED)
+        return Response(new_subtasks_data, status=status.HTTP_201_CREATED)
 
     @staticmethod
     def perform_inference(input_text):
