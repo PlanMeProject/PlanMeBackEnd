@@ -8,9 +8,7 @@ from planmebackend.app.serializers import SubTaskSerializer, TaskSerializer, Use
 
 
 class UserViewSet(viewsets.ViewSet):
-    """
-    ViewSet for handling User-related operations.
-    """
+    """ViewSet for handling User-related operations."""
 
     def list(self, request):
         """List all User objects."""
@@ -58,9 +56,7 @@ class UserViewSet(viewsets.ViewSet):
 
 
 class TaskViewSet(viewsets.ViewSet):
-    """
-    ViewSet for handling Task-related operations.
-    """
+    """ViewSet for handling Task-related operations."""
 
     def list(self, request, user_pk=None):
         """List all Task objects for a specific user."""
@@ -113,9 +109,7 @@ class TaskViewSet(viewsets.ViewSet):
 
 
 class SubTaskViewSet(viewsets.ViewSet):
-    """
-    ViewSet for handling SubTask-related operations.
-    """
+    """ViewSet for handling SubTask-related operations."""
 
     def list(self, request, task_pk=None, **kwargs):
         """List all SubTask objects for a specific task."""
