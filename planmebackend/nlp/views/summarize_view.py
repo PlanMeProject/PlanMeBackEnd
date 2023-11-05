@@ -13,13 +13,13 @@ class SummarizeViewSet(viewsets.ViewSet):
         task_id = request.data.get("task_id")
 
         if not input_text:
-            return Response({"error": "No text provided"}, status=status.HTTP_400_BAD_REQUEST)
+            return Response({"data": "No text provided"}, status=status.HTTP_400_BAD_REQUEST)
 
         try:
             task = Task.objects.get(id=task_id)
 
         except ObjectDoesNotExist:
-            return Response({"error": "Task not found"}, status=status.HTTP_404_NOT_FOUND)
+            return Response({"data": "Task not found"}, status=status.HTTP_404_NOT_FOUND)
 
         generated_text = self.perform_summary(input_text)
         task_data = {

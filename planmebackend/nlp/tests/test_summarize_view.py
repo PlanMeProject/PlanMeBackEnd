@@ -65,4 +65,4 @@ class SummarizeViewSetTestCase(BaseTestCase):
             logging.error("Summarize Task Error: %s", response)
 
         self.assertEqual(status.HTTP_400_BAD_REQUEST, response.status_code)
-        self.assertIn("No text provided", response.data["error"])
+        self.assertIn("No text provided", response.data["data"])
