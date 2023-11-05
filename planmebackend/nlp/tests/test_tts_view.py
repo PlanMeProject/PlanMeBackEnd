@@ -7,7 +7,7 @@ from planmebackend.utils.setupTest import BaseTestCase
 
 
 class NLPTestCase(BaseTestCase):
-    """Test cases for NLPInferenceViewSet."""
+    """Test cases for TTSViewSet."""
 
     def test_create_nlp_subtask(self):
         """
@@ -15,7 +15,7 @@ class NLPTestCase(BaseTestCase):
         """
         data = {
             "data": {
-                "type": "NLPInferenceViewSet",
+                "type": "TTSViewSet",
                 "attributes": {"text": "Read a book, Write a code, sleep enough.", "task_id": self.task.id},
             }
         }
@@ -31,7 +31,7 @@ class NLPTestCase(BaseTestCase):
         """
         data = {
             "data": {
-                "type": "NLPInferenceViewSet",
+                "type": "TTSViewSet",
                 "attributes": {"text": "", "task_id": self.task.id},
             }
         }
