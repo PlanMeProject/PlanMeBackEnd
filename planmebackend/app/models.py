@@ -10,7 +10,7 @@ The models module defines the data models used in the project.
 from django.contrib.auth.models import AbstractUser
 from django.db import models
 
-from ..utils.model_abstracts import Model
+from planmebackend.utils.model_abstracts import Model
 
 
 class User(AbstractUser, Model):
@@ -19,6 +19,7 @@ class User(AbstractUser, Model):
     class Meta:
         """Meta definition for User."""
 
+        app_label = "app"
         verbose_name = "User"
         verbose_name_plural = "Users"
         ordering = ["id"]
@@ -54,6 +55,7 @@ class SubTask(Model):
     class Meta:
         """Meta definition for SubTask."""
 
+        app_label = "app"
         verbose_name = "SubTask"
         verbose_name_plural = "SubTasks"
         ordering = ["id"]
@@ -70,10 +72,12 @@ class SubTask(Model):
 class Dashboard(Model):
     """Model definition for Dashboard."""
 
+    app_label = "app"
     user = models.ForeignKey(User, on_delete=models.CASCADE, related_name="dashboard")
 
 
 class DataVisualization(Model):
     """Model definition for DataVisualization."""
 
+    app_label = "app"
     task = models.ForeignKey(Task, on_delete=models.CASCADE, related_name="data_visualization")

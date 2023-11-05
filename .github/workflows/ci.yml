@@ -8,30 +8,37 @@ on:
   push:
     branches: ['master', 'main']
     paths-ignore: ['docs/**']
-
 jobs:
-  pytest:
-    runs-on: ubuntu-latest
+  build:
+    runs-on: self-hosted
     steps:
       - name: Checkout Code Repository
         uses: actions/checkout@v4
-
-      - name: Generate .env file
-        run: |
-          echo RAILWAY_NAME=${{ secrets.RAILWAY_NAME }} >> .env
-          echo RAILWAY_USER=${{ secrets.RAILWAY_USER }} >> .env
-          echo RAILWAY_PASSWORD=${{ secrets.RAILWAY_PASSWORD }} >> .env
-          echo RAILWAY_HOST=${{ secrets.RAILWAY_HOST }} >> .env
-          echo RAILWAY_PORT=${{ secrets.RAILWAY_PORT }} >> .env
-
       - name: Build the Stack
-        run: docker compose -f local.yml build
+        env:
+          DOCKER_BUILDKIT: 1
+        run: docker-compose -f local.yml build
+    outputs:
+      image-hash: ${{ steps.build.outputs.digest }}
 
+  migrate:
+    needs: build
+    runs-on: self-hosted
+    steps:
       - name: Run DB Migrations
-        run: docker compose -f local.yml run --rm django python manage.py migrate
+        run: docker-compose -f local.yml run --rm django python manage.py migrate
 
+  test:
+    needs: migrate
+    runs-on: self-hosted
+    steps:
       - name: Run API Tests
-        run: docker compose -f local.yml run --rm django python manage.py test planmebackend/app/tests/
+        run: docker-compose -f local.yml run --rm django pytest -vv
 
+  teardown:
+    needs: test
+    runs-on: self-hosted
+    if: always()
+    steps:
       - name: Tear down the Stack
-        run: docker compose -f local.yml down
+        run: docker-compose -f local.yml down

@@ -20,7 +20,8 @@ flake8-isort>=6.1.0  # https://github.com/gforcada/flake8-isort
 coverage>=7.3.2  # https://github.com/nedbat/coveragepy
 pylint-django>=2.5.3  # https://github.com/PyCQA/pylint-django
 pre-commit>=3.5.0  # https://github.com/pre-commit/pre-commit
-
+pydocstyle>=6.3.0
+sphinxcontrib-napoleon>=0.7
 # Django
 # ------------------------------------------------------------------------------
 django-debug-toolbar>=4.2.0  # https://github.com/jazzband/django-debug-toolbar
