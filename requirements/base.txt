@@ -28,5 +28,5 @@ drf-spectacular>=0.26.5  # https://github.com/tfranzel/drf-spectacular
 google-auth-oauthlib>=1.1.0
 google-api-python-client>=2.104.0
 # NLP model
-torch>=2.1.0
+# torch>=2.1.0
 transformers>=4.35.0
