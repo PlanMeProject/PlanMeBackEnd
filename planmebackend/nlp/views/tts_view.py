@@ -1,3 +1,4 @@
+"""A module for the TTSViewSet class of the nlp app."""
 import torch
 from django.db import transaction
 from rest_framework import status, viewsets
@@ -14,6 +15,7 @@ class TTSViewSet(viewsets.ViewSet):
     """
 
     def create(self, request, *args, **kwargs):
+        """The method to process text and update SubTask entries in the database."""
         input_text = request.data.get("text")
         task_id = request.data.get("task_id")
         generated_text = self.perform_inference(input_text)
@@ -36,6 +38,7 @@ class TTSViewSet(viewsets.ViewSet):
 
     @staticmethod
     def perform_inference(input_text):
+        """The method to perform inference on the input text."""
         model = NlpConfig.tts_model
         tokenizer = NlpConfig.tokenizer
         model.eval()

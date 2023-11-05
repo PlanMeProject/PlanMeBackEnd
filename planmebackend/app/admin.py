@@ -1,3 +1,4 @@
+"""Admin module for the app."""
 from django.contrib import admin
 
 from .models import SubTask, Task, User

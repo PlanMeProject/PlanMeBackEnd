@@ -4,8 +4,6 @@ The models module defines the data models used in the project.
 - User: Represents an authenticated user with a unique ID and token.
 - Task: Represents a task object associated with a user.
 - SubTask: Represents a sub-task under a main task.
-- Dashboard: Represents a dashboard associated with a user.
-- DataVisualization: Represents data visualizations associated with tasks.
 """
 from django.contrib.auth.models import AbstractUser
 from django.db import models

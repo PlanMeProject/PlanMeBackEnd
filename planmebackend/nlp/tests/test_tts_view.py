@@ -1,3 +1,4 @@
+"""App config for planmebackend app."""
 import logging
 
 from rest_framework import status

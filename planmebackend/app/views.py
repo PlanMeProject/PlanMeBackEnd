@@ -1,3 +1,4 @@
+"""A module for handling API requests."""
 from django.core.exceptions import ObjectDoesNotExist
 from rest_framework import status, viewsets
 from rest_framework.response import Response
