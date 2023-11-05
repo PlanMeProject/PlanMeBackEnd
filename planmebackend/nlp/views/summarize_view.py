@@ -1,10 +1,10 @@
+from django.apps import apps
 from django.core.exceptions import ObjectDoesNotExist
 from rest_framework import status, viewsets
 from rest_framework.response import Response
 
 from planmebackend.app.models import Task
 from planmebackend.app.serializers import TaskSerializer
-from planmebackend.nlp.apps import NlpConfig
 
 
 class SummarizeViewSet(viewsets.ViewSet):
@@ -36,4 +36,4 @@ class SummarizeViewSet(viewsets.ViewSet):
 
     @staticmethod
     def perform_summary(input_text):
-        return NlpConfig.summarizer(input_text)[0]["summary_text"]
+        return apps.get_app_config("nlp").get_summarizer()(input_text)[0]["summary_text"]
