@@ -10,7 +10,7 @@ on:
     paths-ignore: ['docs/**']
 jobs:
   build:
-    runs-on: ubuntu-latest
+    runs-on: self-hosted
     steps:
       - name: Checkout Code Repository
         uses: actions/checkout@v4
@@ -23,21 +23,21 @@ jobs:
 
   migrate:
     needs: build
-    runs-on: ubuntu-latest
+    runs-on: self-hosted
     steps:
       - name: Run DB Migrations
         run: docker-compose -f local.yml run --rm django python manage.py migrate
 
   test:
     needs: migrate
-    runs-on: ubuntu-latest
+    runs-on: self-hosted
     steps:
       - name: Run API Tests
         run: docker-compose -f local.yml run --rm django pytest -vv
 
   teardown:
     needs: test
-    runs-on: ubuntu-latest
+    runs-on: self-hosted
     if: always()
     steps:
       - name: Tear down the Stack
