@@ -67,17 +67,3 @@ class SubTask(Model):
     def __str__(self):
         """Unicode's representation of SubTask."""
         return self.title
-
-
-class Dashboard(Model):
-    """Model definition for Dashboard."""
-
-    app_label = "app"
-    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name="dashboard")
-
-
-class DataVisualization(Model):
-    """Model definition for DataVisualization."""
-
-    app_label = "app"
-    task = models.ForeignKey(Task, on_delete=models.CASCADE, related_name="data_visualization")
