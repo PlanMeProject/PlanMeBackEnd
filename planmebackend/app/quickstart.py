@@ -1,6 +1,6 @@
 from datetime import datetime
 
-from google_auth_oauthlib.flow import InstalledAppFlow
+from flow import InstalledAppFlow
 from googleapiclient.discovery import build
 
 
@@ -36,7 +36,9 @@ class GoogleClassroomAPI:
         ]
 
         flow = InstalledAppFlow.from_client_secrets_file("credentials.json", scopes)
-        credentials = flow.run_local_server(port=0)
+        flow.redirect_uri = 'http://localhost:57747/'
+        local_server, wsgi_app, auth_url = flow.run_local_server(port=0, open_browser=False)
+        credentials = flow.get_credentials(wsgi_app, local_server)
         service = build("classroom", "v1", credentials=credentials)
 
         return service
