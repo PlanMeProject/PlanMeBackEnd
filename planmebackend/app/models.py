@@ -8,10 +8,10 @@ The models module defines the data models used in the project.
 from django.contrib.auth.models import AbstractUser
 from django.db import models
 
-from planmebackend.utils.model_abstracts import Model
+from planmebackend.utils.model_abstracts import AbstractModel
 
 
-class User(AbstractUser, Model):
+class User(AbstractUser, AbstractModel):
     """Model definition for User."""
 
     class Meta:
@@ -25,7 +25,7 @@ class User(AbstractUser, Model):
     token = models.CharField(max_length=255)
 
 
-class Task(Model):
+class Task(AbstractModel):
     """Model definition for Task."""
 
     class Meta:
@@ -47,7 +47,7 @@ class Task(Model):
         return self.title
 
 
-class SubTask(Model):
+class SubTask(AbstractModel):
     """Model definition for SubTask."""
 
     class Meta:
