@@ -1,91 +1,86 @@
-from google_auth_oauthlib.flow import InstalledAppFlow
-from googleapiclient.discovery import build
+import logging
+from datetime import datetime
+
+import requests
+from decouple import config
+from django.utils import timezone
+from rest_framework import status, viewsets
+from rest_framework.response import Response
+
+from planmebackend.app.models import Task, User
 
 
-def initialize_api():
-    scopes = [
-        "https://www.googleapis.com/auth/classroom.courses.readonly",
-        "https://www.googleapis.com/auth/classroom.rosters.readonly",
-        "https://www.googleapis.com/auth/classroom.course-work.readonly",
-        "https://www.googleapis.com/auth/classroom.student-submissions.me.readonly",
-    ]
+class GoogleClassroomViewSet(viewsets.ViewSet):
+    @staticmethod
+    def exchange_code_for_token(authorization_code):
+        token_url = config("TOKEN_URL")
+        client_id = config("GOOGLE_CLIENT_ID")
+        client_secret = config("GOOGLE_CLIENT_SECRET")
+        redirect_uri = config("REDIRECT_URI")
 
-    flow = InstalledAppFlow.from_client_secrets_file("credentials.json", scopes)
-    credentials = flow.run_local_server(port=0)
-    service = build("classroom", "v1", credentials=credentials)
-
-    return service
-
-
-def get_courses(service):
-    results = service.courses().list(studentId="me").execute()
-    return results.get("courses", [])
-
-
-def get_students(service, course_id):
-    students_results = service.courses().students().list(courseId=course_id).execute()
-    return students_results.get("students", [])
-
-
-def get_works(service, course_id):
-    coursework_results = service.courses().courseWork().list(courseId=course_id).execute()
-    return coursework_results
-
-
-def student_information(students):
-    student_info = []
-    for student in students:
-        info = {
-            "course_id": student["courseId"],
-            "user_id": student["userId"],
-            "name": student["profile"]["name"]["givenName"],
-            "family_name": student["profile"]["name"]["familyName"],
-            "full_name": student["profile"]["name"]["fullName"],
+        data = {
+            "code": authorization_code,
+            "client_id": client_id,
+            "client_secret": client_secret,
+            "redirect_uri": redirect_uri,
+            "grant_type": "authorization_code",
         }
-        student_info.append(info)
-    return student_info
 
+        response = requests.post(token_url, data=data)
+        if response.status_code == 200:
+            return response.json()
+        else:
+            raise Exception("Failed to retrieve tokens")
 
-def task(course):
-    course_data = {
-        "course_id": course["id"],
-        "course_name": course["name"],
-        "course_section": course.get("section"),
-        "course_description": course.get("description"),
-        "course_status": course.get("courseState"),
-    }
-    return course_data
+    @staticmethod
+    def get_classroom_courses(access_token):
+        url = "https://classroom.googleapis.com/v1/courses"
+        headers = {"Authorization": f"Bearer {access_token}"}
 
+        response = requests.get(url, headers=headers)
+        if response.status_code == 200:
+            return response.json()
+        else:
+            raise Exception("Failed to retrieve classroom data")
 
-def subtask(service, course_id):
-    assignments = get_works(service, course_id).get("courseWork", [])
+    @staticmethod
+    def parse_due_date(due_date_dict):
+        if due_date_dict:
+            return datetime(due_date_dict["year"], due_date_dict["month"], due_date_dict["day"]).date()
+        return timezone.now().date()
 
-    assignments_info = []
-    for assignment in assignments:
-        info = {
-            "course_id": course_id,
-            "title": assignment.get("title"),
-            "description": assignment.get("description"),
-            "due_date": str(assignment.get("dueDate", {}).get("year"))
-            + "-"
-            + str(assignment.get("dueDate", {}).get("month"))
-            + "-"
-            + str(assignment.get("dueDate", {}).get("day")),
-            "status": assignment.get("state"),
-            "max_points": assignment.get("maxPoints"),
-        }
-        assignments_info.append(info)
-    return assignments_info
+    def create_tasks_for_user(self, user, classroom_data):
+        for course in classroom_data.get("courses", []):
+            for assignment in course.get("courseWork", []):
+                task_data = {
+                    "title": assignment["title"],
+                    "description": assignment.get("description", ""),
+                    "summarized_text": "",  # Placeholder
+                    "due_date": self.parse_due_date(assignment.get("dueDate")),
+                    "status": "Pending",
+                    "user": user,
+                }
+                Task.objects.create(**task_data)
 
+    def create(self, request, *args, **kwargs):
+        authorization_code = request.data.get("authorization_code")
 
-def main():
-    service = initialize_api()
-    courses = get_courses(service)
-    for course in courses:
-        print("Course Information:", task(course))
-        print("Assignments Information:", subtask(service, course["id"]))
-        print()
+        if not authorization_code:
+            return Response({"error": "Authorization code not provided"}, status=status.HTTP_400_BAD_REQUEST)
 
+        try:
+            tokens = self.exchange_code_for_token(authorization_code)
+            classroom_data = self.get_classroom_courses(tokens["access_token"])
 
-if __name__ == "__main__":
-    main()
+            user_email = classroom_data["userEmail"]  # Extract user email from classroom data
+            user, created = User.objects.get_or_create(
+                username=user_email, defaults={"email": user_email, "token": tokens["access_token"]}
+            )
+
+            self.create_tasks_for_user(user, classroom_data)
+
+            return Response({"user_id": user.id}, status=status.HTTP_201_CREATED)
+
+        except Exception as e:
+            logging.error(e)
+            return Response({"error": str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
