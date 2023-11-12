@@ -23,6 +23,8 @@ class User(AbstractUser, AbstractModel):
         ordering = ["id"]
 
     token = models.CharField(max_length=255)
+    username = models.CharField(max_length=255, unique=True)
+    email = models.EmailField(unique=True)
 
 
 class Task(AbstractModel):
@@ -41,6 +43,7 @@ class Task(AbstractModel):
     due_date = models.DateField()
     status = models.CharField(max_length=255)
     user = models.ForeignKey(User, on_delete=models.CASCADE, related_name="tasks")
+    calendar_id = models.CharField(max_length=255, null=True, blank=True, default=None)
 
     def __str__(self):
         """Unicode's representation of Task."""

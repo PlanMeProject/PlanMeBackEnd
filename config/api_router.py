@@ -3,6 +3,7 @@ from rest_framework.routers import DefaultRouter, SimpleRouter
 from rest_framework_nested import routers
 
 from planmebackend.app.views import SubTaskViewSet, TaskViewSet, UserViewSet
+from planmebackend.classroom.views import GoogleClassroomViewSet
 from planmebackend.nlp.views import SummarizeViewSet, TTSViewSet
 
 if settings.DEBUG:
@@ -11,6 +12,7 @@ else:
     router = SimpleRouter()
 
 router.register("users", UserViewSet, basename="user")
+router.register("classroom", GoogleClassroomViewSet, basename="classroom")
 router.register("tts", TTSViewSet, basename="tts")
 router.register("summarize", SummarizeViewSet, basename="summarize")
 
