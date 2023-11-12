@@ -45,10 +45,14 @@ class GoogleClassroomAPI:
         return service
     
     def get_user_email(self):
-        people_service = build('people', 'v1', credentials=self.service._http.credentials)
-        profile = people_service.people().get(resourceName='people/me', personFields='emailAddresses').execute()
-        email = profile.get('emailAddresses', [])[0].get('value')
-        return email
+        """
+        Retrieves the email address of the authenticated user.
+
+        Returns:
+            str: The user's email address.
+        """
+        user_info = self.user_info_service.userinfo().get().execute()
+        return user_info.get('email')
 
     def get_courses(self):
         """
@@ -188,8 +192,10 @@ if __name__ == "__main__":
     api = GoogleClassroomAPI()
     course_name = "219241 ISP"
     course_info, assignments_info = api.assignments_for_specific_course(course_name)
+    user_email = api.get_user_email()
 
     if course_info and assignments_info:
+        print("User Email:", user_email)
         print("Course Information:", course_info)
         print("Assignments Information:", assignments_info)
         print()
