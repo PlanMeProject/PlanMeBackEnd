@@ -19,7 +19,7 @@ class GoogleClassroomAPI:
         """
         Initializes the GoogleClassroomAPI object with a service connection to Google Classroom.
         """
-        self.service = self.initialize_api()
+        self.classroom_service, self.user_info_service = self.initialize_api()
 
     def initialize_api(self):
         """
@@ -29,6 +29,7 @@ class GoogleClassroomAPI:
             service: A Resource object with methods for interacting with the service.
         """
         scopes = [
+            "openid",
             "https://www.googleapis.com/auth/classroom.courses.readonly",
             "https://www.googleapis.com/auth/classroom.rosters.readonly",
             "https://www.googleapis.com/auth/classroom.course-work.readonly",
@@ -41,8 +42,8 @@ class GoogleClassroomAPI:
         local_server, wsgi_app, auth_url = flow.run_local_server(port=0, open_browser=False)
         credentials = flow.get_credentials(wsgi_app, local_server)
         service = build("classroom", "v1", credentials=credentials)
-
-        return service
+        user_info_service = build("oauth2", "v2", credentials=credentials)
+        return service, user_info_service
     
     def get_user_email(self):
         """
@@ -61,7 +62,7 @@ class GoogleClassroomAPI:
         Returns:
             List[Dict]: A list of course dictionaries.
         """
-        results = self.service.courses().list(studentId="me").execute()
+        results = self.classroom_service.courses().list(studentId="me").execute()
         return results.get("courses", [])
 
     def get_works(self, course_id):
@@ -74,7 +75,7 @@ class GoogleClassroomAPI:
         Returns:
             Dict: A dictionary containing course works.
         """
-        coursework_results = self.service.courses().courseWork().list(courseId=course_id).execute()
+        coursework_results = self.classroom_service.courses().courseWork().list(courseId=course_id).execute()
         return coursework_results
 
     def get_student_submissions_batch(self, course_id, assignment_ids):
@@ -88,7 +89,7 @@ class GoogleClassroomAPI:
         Returns:
             Dict: A dictionary containing student submissions indexed by assignment IDs.
         """
-        batch = self.service.new_batch_http_request()
+        batch = self.classroom_service.new_batch_http_request()
         student_submissions = {}
 
         def callback(request_id, response, exception):
@@ -97,7 +98,7 @@ class GoogleClassroomAPI:
 
         for assignment_id in assignment_ids:
             req = (
-                self.service.courses()
+                self.classroom_service.courses()
                 .courseWork()
                 .studentSubmissions()
                 .list(courseId=course_id, courseWorkId=assignment_id, userId="me")
