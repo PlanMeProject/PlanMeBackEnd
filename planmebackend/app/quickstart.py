@@ -43,6 +43,12 @@ class GoogleClassroomAPI:
         service = build("classroom", "v1", credentials=credentials)
 
         return service
+    
+    def get_user_email(self):
+        people_service = build('people', 'v1', credentials=self.service._http.credentials)
+        profile = people_service.people().get(resourceName='people/me', personFields='emailAddresses').execute()
+        email = profile.get('emailAddresses', [])[0].get('value')
+        return email
 
     def get_courses(self):
         """
