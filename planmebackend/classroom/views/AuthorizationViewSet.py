@@ -36,8 +36,11 @@ class AuthorizationViewSet(viewsets.ViewSet):
         if response.status_code == 200:
             return response.json()
         else:
-            print(response.text)
-            raise Exception("Failed to retrieve tokens")
+            raise Exception(
+                f"(Exchange) Error fetching user profile: Status Code:"
+                f" {response.status_code}, Response: {response.text}, "
+                f"code: {authorization_code}"
+            )
 
     @staticmethod
     def get_user_profile(access_token):
@@ -49,9 +52,9 @@ class AuthorizationViewSet(viewsets.ViewSet):
             return response.json()
         else:
             raise Exception(
-                f"Error fetching user profile: Status Code: {response.status_code}, Response: {response.text}"
+                f"(Profile) Error fetching user profile: Status Code:"
+                f" {response.status_code}, Response: {response.text}"
             )
-            # raise Exception("Failed to retrieve user profile data")
 
     def create(self, request, *args, **kwargs):
         full_url = request.data.get("full_url")
