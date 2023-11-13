@@ -3,7 +3,7 @@ from rest_framework.routers import DefaultRouter, SimpleRouter
 from rest_framework_nested import routers
 
 from planmebackend.app.views import SubTaskViewSet, TaskViewSet, UserViewSet
-from planmebackend.classroom.views import AuthorizeSessionViewSet, ClassroomDataViewSet
+from planmebackend.classroom.views import AssignmentsViewSet, AuthorizationViewSet, CoursesViewSet
 from planmebackend.nlp.views import SummarizeViewSet, TTSViewSet
 
 if settings.DEBUG:
@@ -12,8 +12,9 @@ else:
     router = SimpleRouter()
 
 router.register("users", UserViewSet, basename="user")
-router.register("authorize", AuthorizeSessionViewSet, basename="authorize")
-router.register("classroom", ClassroomDataViewSet, basename="classroom")
+router.register("authorize", AuthorizationViewSet, basename="authorize")
+router.register("courses", CoursesViewSet, basename="courses")
+router.register("assignments", AssignmentsViewSet, basename="assignments")
 router.register("tts", TTSViewSet, basename="tts")
 router.register("summarize", SummarizeViewSet, basename="summarize")
 
