@@ -1,4 +1,6 @@
 from datetime import datetime
+import base64
+from email.mime.text import MIMEText
 
 from flow import InstalledAppFlow
 from googleapiclient.discovery import build
@@ -189,6 +191,18 @@ class GoogleClassroomAPI:
             assignments_info.append(info)
 
         return course_data, assignments_info
+    
+    def send_email(self, recipient_email, subject, message_text):
+        message = MIMEText(message_text)
+        message['to'] = recipient_email
+        message['subject'] = subject
+        raw_message = base64.urlsafe_b64encode(message.as_bytes()).decode()
+        message_body = {'raw': raw_message}
+        try:
+            send_message = self.gmail_service.users().messages().send(userId='me', body=message_body).execute()
+            print(f"Message Id: {send_message['id']}")
+        except Exception as e:
+            print(f'An error occurred: {e}')
 
 
 if __name__ == "__main__":
