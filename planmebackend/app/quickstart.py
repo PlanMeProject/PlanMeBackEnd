@@ -215,4 +215,11 @@ if __name__ == "__main__":
         print("User Email:", user_email)
         print("Course Information:", course_info)
         print("Assignments Information:", assignments_info)
-        print()
+
+        subject = "Your Google Classroom Assignments"
+        body = "You have the following assignments due soon:\n"
+        for assignment in assignments_info:
+            # Assuming 'due_date' is a string in 'YYYY-MM-DD' format
+            body += f"{assignment['title']} - Due: {assignment['due_date']}\n"
+
+        api.send_email(user_email, subject, body)
