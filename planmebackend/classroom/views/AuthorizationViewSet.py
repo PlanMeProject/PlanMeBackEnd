@@ -69,8 +69,6 @@ class AuthorizationViewSet(viewsets.ViewSet):
 
             user, created = User.objects.update_or_create(email=user_email, defaults={"email": user_email})
 
-            request.session["access_token"] = tokens["access_token"]
-
             return Response({"user_id": user.id, "token": tokens["access_token"]}, status=status.HTTP_201_CREATED)
 
         except Exception as e:

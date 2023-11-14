@@ -17,8 +17,8 @@ class CoursesViewSet(viewsets.ViewSet):
         else:
             raise Exception("Failed to retrieve classroom data")
 
-    def list(self, request, *args, **kwargs):
-        access_token = request.session.get("access_token")
+    def create(self, request, *args, **kwargs):
+        access_token = request.data.get("access_token")
         if not access_token:
             return Response({"error": "Access token not found in session"}, status=status.HTTP_400_BAD_REQUEST)
 
