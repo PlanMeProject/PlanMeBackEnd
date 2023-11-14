@@ -34,7 +34,8 @@ class GoogleClassroomAPI:
             "https://www.googleapis.com/auth/classroom.rosters.readonly",
             "https://www.googleapis.com/auth/classroom.course-work.readonly",
             "https://www.googleapis.com/auth/classroom.student-submissions.me.readonly",
-            "https://www.googleapis.com/auth/userinfo.email"
+            "https://www.googleapis.com/auth/userinfo.email",
+            "https://www.googleapis.com/auth/gmail.send"
         ]
 
         flow = InstalledAppFlow.from_client_secrets_file("credentials.json", scopes)
