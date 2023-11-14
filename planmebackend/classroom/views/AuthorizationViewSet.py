@@ -71,7 +71,7 @@ class AuthorizationViewSet(viewsets.ViewSet):
 
             request.session["access_token"] = tokens["access_token"]
 
-            return Response({"user_id": user.id}, status=status.HTTP_201_CREATED)
+            return Response({"user_id": user.id, "token": tokens["access_token"]}, status=status.HTTP_201_CREATED)
 
         except Exception as e:
             logging.error(e)
