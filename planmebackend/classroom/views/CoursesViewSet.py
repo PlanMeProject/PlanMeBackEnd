@@ -24,7 +24,7 @@ class CoursesViewSet(viewsets.ViewSet):
 
         try:
             classroom_data = self.get_classroom_courses(access_token)
-            courses = [{"title": course.get("name")} for course in classroom_data.get("courses", [])]
+            courses = [{"title": course} for course in classroom_data.get("courses", [])]
 
             return Response(courses, status=status.HTTP_200_OK)
 
