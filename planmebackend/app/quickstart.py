@@ -46,8 +46,7 @@ class GoogleClassroomAPI:
         credentials = flow.get_credentials(wsgi_app, local_server)
         classroom_service = build("classroom", "v1", credentials=credentials)
         user_info_service = build("oauth2", "v2", credentials=credentials)
-        gmail_service = build('gmail', 'v1', credentials=credentials)
-        return classroom_service, user_info_service, gmail_service
+        return classroom_service, user_info_service
     
     def get_user_email(self):
         """
