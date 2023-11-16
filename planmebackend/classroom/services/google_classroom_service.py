@@ -30,8 +30,10 @@ class GoogleClassroomAPI:
 
     @staticmethod
     def parse_due_date(due_date_data):
+        if not due_date_data:
+            return None
         return date(
-            year=due_date_data.get("year"),
-            month=due_date_data.get("month"),
-            day=due_date_data.get("day"),
+            year=due_date_data.get("year", None),
+            month=due_date_data.get("month", None),
+            day=due_date_data.get("day", None),
         )
