@@ -229,4 +229,6 @@ class GoogleClassroomAPI:
 
 
 if __name__ == "__main__":
-    pass
+    classroom_api = GoogleClassroomAPI()
+    classroom_api.check_for_new_assignments()
+
