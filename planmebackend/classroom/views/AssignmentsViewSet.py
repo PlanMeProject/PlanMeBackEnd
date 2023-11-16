@@ -9,98 +9,104 @@ from rest_framework.response import Response
 from planmebackend.app.models import Task
 from planmebackend.app.serializers import TaskSerializer
 
+GOOGLE_CLASSROOM_API_BASE = "https://classroom.googleapis.com/v1"
+COURSE_WORK_ENDPOINT = "/courses/{course_id}/courseWork"
+STUDENT_SUBMISSIONS_ENDPOINT = "/courses/{course_id}/courseWork/{course_work_id}/studentSubmissions"
+
+
+class GoogleClassroomAPI:
+    @staticmethod
+    def _make_request(url, headers):
+        response = requests.get(url, headers=headers)
+        if response.status_code != 200:
+            logging.error(f"Google Classroom API error: {response.text}")
+            raise Exception(f"API Request failed: {response.text}")
+        return response.json()
+
+    @classmethod
+    def get_course_work(cls, access_token, course_id):
+        url = f"{GOOGLE_CLASSROOM_API_BASE}" f"{COURSE_WORK_ENDPOINT.format(course_id=course_id)}"
+        headers = {"Authorization": f"Bearer {access_token}"}
+        return cls._make_request(url, headers).get("courseWork", [])
+
+    @classmethod
+    def get_student_submissions(cls, access_token, course_id, course_work_id):
+        url = (
+            f"{GOOGLE_CLASSROOM_API_BASE}"
+            f"{STUDENT_SUBMISSIONS_ENDPOINT.format(course_id=course_id, course_work_id=course_work_id)}"
+        )
+        headers = {"Authorization": f"Bearer {access_token}"}
+        return cls._make_request(url, headers).get("studentSubmissions", [])
+
 
 class AssignmentsViewSet(viewsets.ViewSet):
-    @staticmethod
-    def get_course_work(access_token, course_id):
-        url = f"https://classroom.googleapis.com/v1/courses/{course_id}/courseWork"
-        headers = {"Authorization": f"Bearer {access_token}"}
-        response = requests.get(url, headers=headers)
-
-        if response.status_code == 200:
-            return response.json().get("courseWork", [])
-        else:
-            raise Exception(f"Error fetching course work for course ID {course_id}: {response.text}")
-
-    @staticmethod
-    def get_student_submissions(access_token, course_id, course_work_id):
-        url = f"https://classroom.googleapis.com/v1/courses/{course_id}/courseWork/{course_work_id}/studentSubmissions"
-        headers = {"Authorization": f"Bearer {access_token}"}
-
-        response = requests.get(url, headers=headers)
-        if response.status_code == 200:
-            return response.json().get("studentSubmissions", [])
-        else:
-            raise Exception("Failed to retrieve student submissions", response.text)
-
     def create(self, request, *args, **kwargs):
-        courses = request.data.get("all_courses").get("data", [])
-        access_token = request.data.get("access_token")
-        check_status = request.data.get("check_status", "")
-        user_id = request.data.get("user_id", None)
+        data = request.data
+        access_token = data.get("access_token")
+        courses = data.get("all_courses", {}).get("data", [])
+        check_status = data.get("check_status", "")
+        user_id = data.get("user_id")
 
-        if not access_token:
-            return Response({"error": "Access token not found"}, status=status.HTTP_400_BAD_REQUEST)
+        if not all([access_token, courses, user_id]):
+            return Response({"error": "Missing required data"}, status=status.HTTP_400_BAD_REQUEST)
 
-        if not courses:
-            return Response({"error": "All courses not provided"}, status=status.HTTP_400_BAD_REQUEST)
+        user = self._get_user(user_id)
+        new_tasks = self._process_courses(courses, access_token, check_status, user)
 
-        if not user_id:
-            return Response({"error": "User ID not provided"}, status=status.HTTP_400_BAD_REQUEST)
+        Task.objects.bulk_create(new_tasks)
+        all_tasks = Task.objects.filter(user=user)
+        serializer = TaskSerializer(all_tasks, many=True)
+        return Response(serializer.data, status=status.HTTP_201_CREATED)
 
+    @staticmethod
+    def _get_user(user_id):
         User = get_user_model()
         try:
-            user = User.objects.get(id=user_id)
+            return User.objects.get(id=user_id)
         except User.DoesNotExist:
-            return Response({"error": "User not found"}, status=status.HTTP_404_NOT_FOUND)
+            raise Exception("User not found")
 
+    def _process_courses(self, courses, access_token, check_status, user):
         new_tasks = []
+        for course in courses:
+            course_id = course.get("title", {}).get("id", "")
+            assignments = GoogleClassroomAPI.get_course_work(access_token, course_id)
+            new_tasks.extend(self._process_assignments(assignments, course_id, access_token, check_status, user))
+        return new_tasks
 
-        try:
-            for course in courses:
-                course_id = course.get("title", {}).get("id", "")
-                assignments = self.get_course_work(access_token, course_id)
+    def _process_assignments(self, assignments, course_id, access_token, check_status, user):
+        tasks = []
+        for assignment in assignments:
+            if Task.objects.filter(title=assignment.get("title"), user=user).exists():
+                continue
 
-                for assignment in assignments:
-                    assignment_title = assignment.get("title")
-                    due_date_data = assignment.get("dueDate", None)
+            if check_status and self._should_skip_assignment(access_token, course_id, assignment):
+                continue
 
-                    if Task.objects.filter(title=assignment_title, user=user).exists():
-                        continue
+            due_date_data = assignment.get("dueDate")
+            due_date = self._parse_due_date(due_date_data) if due_date_data else None
 
-                    if due_date_data:
-                        assignment_due_date = date(
-                            year=due_date_data.get("year"),
-                            month=due_date_data.get("month"),
-                            day=due_date_data.get("day"),
-                        )
-                    else:
-                        assignment_due_date = None
+            tasks.append(
+                Task(
+                    title=assignment.get("title", ""),
+                    description=assignment.get("description", ""),
+                    summarized_text=assignment.get("description", ""),
+                    due_date=due_date,
+                    status="Todo",
+                    user=user,
+                )
+            )
+        return tasks
 
-                    if check_status:
-                        student_submissions = self.get_student_submissions(
-                            access_token, course_id, assignment.get("id", None)
-                        )
-                        if not student_submissions or student_submissions[0].get("state") in ["TURNED_IN", "RETURNED"]:
-                            continue
+    @staticmethod
+    def _should_skip_assignment(access_token, course_id, assignment):
+        student_submissions = GoogleClassroomAPI.get_student_submissions(access_token, course_id, assignment.get("id"))
+        return not student_submissions or student_submissions[0].get("state") in ["TURNED_IN", "RETURNED"]
 
-                    new_tasks.append(
-                        Task(
-                            title=assignment.get("title", ""),
-                            description=assignment.get("description", ""),
-                            summarized_text=assignment.get("description", ""),
-                            due_date=assignment_due_date,
-                            status="Todo",
-                            user=user,
-                        )
-                    )
-
-            Task.objects.bulk_create(new_tasks)
-
-            all_tasks = Task.objects.filter(user=user)
-            serializer = TaskSerializer(all_tasks, many=True)
-            return Response(serializer.data, status=status.HTTP_201_CREATED)
-
-        except Exception as e:
-            logging.error(e)
-            return Response({"error": str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+    @staticmethod
+    def _parse_due_date(due_date_data):
+        return date(
+            year=due_date_data.get("year"),
+            month=due_date_data.get("month"),
+            day=due_date_data.get("day"),
+        )
