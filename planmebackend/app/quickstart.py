@@ -190,35 +190,7 @@ class GoogleClassroomAPI:
             assignments_info.append(info)
 
         return course_data, assignments_info
-    
-    def send_email(self, recipient_email, subject, message_text):
-        message = MIMEText(message_text)
-        message['to'] = recipient_email
-        message['subject'] = subject
-        raw_message = base64.urlsafe_b64encode(message.as_bytes()).decode()
-        message_body = {'raw': raw_message}
-        try:
-            send_message = self.gmail_service.users().messages().send(userId='me', body=message_body).execute()
-            print(f"Message Id: {send_message['id']}")
-        except Exception as e:
-            print(f'An error occurred: {e}')
 
 
 if __name__ == "__main__":
-    api = GoogleClassroomAPI()
-    course_name = "219241 ISP"
-    course_info, assignments_info = api.assignments_for_specific_course(course_name)
-    user_email = api.get_user_email()
-
-    if course_info and assignments_info:
-        print("User Email:", user_email)
-        print("Course Information:", course_info)
-        print("Assignments Information:", assignments_info)
-
-        subject = "Your Google Classroom Assignments"
-        body = "You have the following assignments due soon:\n"
-        for assignment in assignments_info:
-            # Assuming 'due_date' is a string in 'YYYY-MM-DD' format
-            body += f"{assignment['title']} - Due: {assignment['due_date']}\n"
-
-        api.send_email(user_email, subject, body)
+    pass
