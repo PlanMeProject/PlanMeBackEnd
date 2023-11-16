@@ -6,7 +6,6 @@ from pathlib import Path
 import environ
 
 BASE_DIR = Path(__file__).resolve(strict=True).parent.parent.parent
-# planmebackend/
 APPS_DIR = BASE_DIR / "planmebackend"
 env = environ.Env()
 
@@ -27,7 +26,7 @@ TIME_ZONE = "Asia/Bangkok"
 # https://docs.djangoproject.com/en/dev/ref/settings/#language-code
 LANGUAGE_CODE = "en-us"
 # https://docs.djangoproject.com/en/dev/ref/settings/#languages
-# from django.utils.translation import gettext_lazy as _
+# from django.services.translation import gettext_lazy as _
 # LANGUAGES = [
 #     ('en', _('English')),
 #     ('fr-fr', _('French')),
@@ -352,5 +351,8 @@ SPECTACULAR_SETTINGS = {
     "VERSION": "1.0.0",
     "SERVE_PERMISSIONS": ["rest_framework.permissions.IsAdminUser"],
 }
-# Your stuff...
-# ------------------------------------------------------------------------------
+# Google OAuth Configuration
+# TOKEN_URL = env("TOKEN_URL", "")
+# GOOGLE_CLIENT_ID = env("GOOGLE_CLIENT_ID", "")
+# GOOGLE_CLIENT_SECRET = env("GOOGLE_CLIENT_SECRET", "")
+# REDIRECT_URI = env("REDIRECT_URI", "")
