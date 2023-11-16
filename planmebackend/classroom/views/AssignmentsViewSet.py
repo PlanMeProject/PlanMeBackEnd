@@ -22,6 +22,5 @@ class AssignmentsViewSet(viewsets.ViewSet):
         new_tasks = service.process_courses(courses, access_token, check_status, user)
 
         Task.objects.bulk_create(new_tasks)
-        all_tasks = Task.objects.filter(user=user)
-        serializer = TaskSerializer(all_tasks, many=True)
+        serializer = TaskSerializer(new_tasks, many=True)
         return Response(serializer.data, status=status.HTTP_201_CREATED)
