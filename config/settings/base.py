@@ -352,7 +352,7 @@ SPECTACULAR_SETTINGS = {
     "SERVE_PERMISSIONS": ["rest_framework.permissions.IsAdminUser"],
 }
 # Google OAuth Configuration
-TOKEN_URL = env("TOKEN_URL", "")
-GOOGLE_CLIENT_ID = env("GOOGLE_CLIENT_ID", "")
-GOOGLE_CLIENT_SECRET = env("GOOGLE_CLIENT_SECRET", "")
-REDIRECT_URI = env("REDIRECT_URI", "")
+# TOKEN_URL = env("TOKEN_URL", "")
+# GOOGLE_CLIENT_ID = env("GOOGLE_CLIENT_ID", "")
+# GOOGLE_CLIENT_SECRET = env("GOOGLE_CLIENT_SECRET", "")
+# REDIRECT_URI = env("REDIRECT_URI", "")
