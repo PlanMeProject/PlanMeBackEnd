@@ -62,8 +62,8 @@ class GoogleClassroomAPI:
         """
         Sends an email to the specified recipient.
         """
-        sender_email = "your_email@example.com"
-        password = "your_password"
+        sender_email = "planmeproject.app@gmail.com"
+        password = "planmeproject16112023"
 
         # Create MIME object
         msg = MIMEMultipart()
@@ -90,7 +90,7 @@ class GoogleClassroomAPI:
         for course in courses:
             course_data, assignments_info = self.course_information(course)
             for assignment in assignments_info:
-                email_subject = f"New Assignment in {course_data['course_name']}"
+                email_subject = f"Assignment in {course_data['course_name']}"
                 email_body = f"{assignment['title']} is due on {assignment['due_date']}"
                 self.send_email(recipient_email, email_subject, email_body)
 
@@ -231,4 +231,3 @@ class GoogleClassroomAPI:
 if __name__ == "__main__":
     classroom_api = GoogleClassroomAPI()
     classroom_api.check_for_new_assignments()
-
