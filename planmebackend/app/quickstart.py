@@ -37,7 +37,7 @@ class GoogleClassroomAPI:
             "https://www.googleapis.com/auth/classroom.course-work.readonly",
             "https://www.googleapis.com/auth/classroom.student-submissions.me.readonly",
             "https://www.googleapis.com/auth/userinfo.email",
-            "https://www.googleapis.com/auth/classroom.course-work.me.readonly"
+            "https://www.googleapis.com/auth/classroom.coursework.me"
         ]
 
         flow = InstalledAppFlow.from_client_secrets_file("credentials.json", scopes)
@@ -63,7 +63,7 @@ class GoogleClassroomAPI:
         Sends an email to the specified recipient.
         """
         sender_email = "planmeproject.app@gmail.com"
-        password = "planmeproject16112023"
+        password = "gopc cpyi lzhi blnx"
 
         # Create MIME object
         msg = MIMEMultipart()
