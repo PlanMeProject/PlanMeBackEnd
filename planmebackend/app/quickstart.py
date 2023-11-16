@@ -57,6 +57,29 @@ class GoogleClassroomAPI:
         """
         user_info = self.user_info_service.userinfo().get().execute()
         return user_info.get('email')
+    
+    def send_email(self, recipient_email, subject, body):
+        """
+        Sends an email to the specified recipient.
+        """
+        sender_email = "your_email@example.com"
+        password = "your_password"
+
+        # Create MIME object
+        msg = MIMEMultipart()
+        msg['From'] = sender_email
+        msg['To'] = recipient_email
+        msg['Subject'] = subject
+        msg.attach(MIMEText(body, 'plain'))
+
+        # Setup the SMTP server
+        server = smtplib.SMTP('smtp.gmail.com', 587)
+        server.starttls()
+        server.login(sender_email, password)
+
+        # Send the email and close the connection
+        server.send_message(msg)
+        server.quit()
 
     def get_courses(self):
         """
