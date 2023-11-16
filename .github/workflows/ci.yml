@@ -27,6 +27,11 @@ jobs:
     steps:
       - name: Run DB Migrations
         run: docker-compose -f local.yml run --rm django python manage.py migrate
+        env:
+          TOKEN_URL: ${{ secrets.TOKEN_URL }}
+          GOOGLE_CLIENT_ID: ${{ secrets.GOOGLE_CLIENT_ID }}
+          GOOGLE_CLIENT_SECRET: ${{ secrets.GOOGLE_CLIENT_SECRET }}
+          REDIRECT_URI: ${{ secrets.REDIRECT_URI }}
 
   test:
     needs: migrate
