@@ -80,6 +80,19 @@ class GoogleClassroomAPI:
         # Send the email and close the connection
         server.send_message(msg)
         server.quit()
+    
+    def check_for_new_assignments(self):
+        """
+        Checks for new assignments and sends email notifications to the authenticated user if any are found.
+        """
+        recipient_email = self.get_user_email()
+        courses = self.get_courses()
+        for course in courses:
+            course_data, assignments_info = self.course_information(course)
+            for assignment in assignments_info:
+                email_subject = f"New Assignment in {course_data['course_name']}"
+                email_body = f"{assignment['title']} is due on {assignment['due_date']}"
+                self.send_email(recipient_email, email_subject, email_body)
 
     def get_courses(self):
         """
