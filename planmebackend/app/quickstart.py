@@ -1,7 +1,7 @@
 from datetime import datetime
-import base64
+import smtplib
+from email.mime.multipart import MIMEMultipart
 from email.mime.text import MIMEText
-
 from flow import InstalledAppFlow
 from googleapiclient.discovery import build
 
