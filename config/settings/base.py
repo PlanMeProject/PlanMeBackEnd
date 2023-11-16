@@ -26,7 +26,7 @@ TIME_ZONE = "Asia/Bangkok"
 # https://docs.djangoproject.com/en/dev/ref/settings/#language-code
 LANGUAGE_CODE = "en-us"
 # https://docs.djangoproject.com/en/dev/ref/settings/#languages
-# from django.utils.translation import gettext_lazy as _
+# from django.services.translation import gettext_lazy as _
 # LANGUAGES = [
 #     ('en', _('English')),
 #     ('fr-fr', _('French')),
