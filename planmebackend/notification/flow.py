@@ -445,7 +445,7 @@ class InstalledAppFlow(Flow):
         if authorization_prompt_message:
             print(authorization_prompt_message.format(url=auth_url))
 
-        return (local_server, wsgi_app, auth_url)
+        return (local_server, wsgi_app)
 
     def get_credentials(self, wsgi_app, local_server):
         local_server.timeout = None
