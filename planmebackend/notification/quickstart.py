@@ -9,7 +9,7 @@ all the necessary methods to interact with the Google Classroom services.
 from datetime import datetime
 from googleapiclient.discovery import build
 from flow import InstalledAppFlow
-
+from notification import NotificationSystem
 
 class GoogleClassroomAPI:
     """
@@ -27,7 +27,6 @@ class GoogleClassroomAPI:
         Initializes the GoogleClassroomAPI object with a service connection to Google Classroom.
         """
         self.classroom_service, self.user_info_service = self.initialize_api()
-        self.assignments_seen = self.load_seen_assignments()
 
     def initialize_api(self):
         """
@@ -205,3 +204,5 @@ class GoogleClassroomAPI:
 
 if __name__ == "__main__":
     classroom_api = GoogleClassroomAPI()
+    notification_system = NotificationSystem(classroom_api)
+    notification_system.check_for_new_assignments()
