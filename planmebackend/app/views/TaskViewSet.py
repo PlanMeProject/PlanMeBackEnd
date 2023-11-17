@@ -13,8 +13,17 @@ class TaskViewSet(viewsets.ViewSet):
     """
 
     def list(self, request, user_pk=None):
-        """List all Task objects for a specific user."""
-        queryset = Task.objects.filter(user_id=user_pk)
+        """List all Task objects for a specific user and specific courses."""
+        user_pk = request.query_params.get("user_id", None)
+        courses = request.query_params.getlist("courses", None)
+
+        if not user_pk:
+            return Response({"error": "User ID is required"}, status=status.HTTP_400_BAD_REQUEST)
+        if not courses:
+            queryset = Task.objects.none()
+        else:
+            queryset = Task.objects.filter(user_id=user_pk, course__in=courses)
+
         serializer = TaskSerializer(queryset, many=True)
         return Response(serializer.data, status=status.HTTP_200_OK)
 
