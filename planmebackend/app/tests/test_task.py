@@ -10,7 +10,7 @@ class TaskTestCase(BaseTestCase):
 
     def test_get_all_tasks(self):
         """Test the API for getting all tasks."""
-        response = self.client.get(self.task_url)
+        response = self.client.get(f"{self.task_url}?user_id={self.user.id}")
         self.assertEqual(status.HTTP_200_OK, response.status_code)
 
     def test_get_one_task(self):
