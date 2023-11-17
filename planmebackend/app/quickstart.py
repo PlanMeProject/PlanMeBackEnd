@@ -90,9 +90,10 @@ class GoogleClassroomAPI:
         for course in courses:
             course_data, assignments_info = self.course_information(course)
             for assignment in assignments_info:
-                email_subject = f"Assignment in {course_data['course_name']}"
-                email_body = f"{assignment['title']} is due on {assignment['due_date']}"
-                self.send_email(recipient_email, email_subject, email_body)
+                if assignment['due_date'] is not None:
+                    email_subject = f"Assignment in {course_data['course_name']}"
+                    email_body = f"{assignment['title']} is due on {assignment['due_date']}"
+                    self.send_email(recipient_email, email_subject, email_body)
 
     def get_courses(self):
         """
