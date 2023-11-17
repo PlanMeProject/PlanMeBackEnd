@@ -1,3 +1,10 @@
+"""
+This module defines the NotificationSystem class, which interfaces with a classroom API
+to track assignments and send email notifications about new assignments or upcoming deadlines.
+The system checks for new assignments, determines if they are due soon, and sends
+corresponding notifications to the user.
+"""
+
 import json
 import smtplib
 from email.mime.multipart import MIMEMultipart
@@ -73,8 +80,9 @@ class NotificationSystem:
                 if assignment_id not in self.assignments_seen:
                     self.assignments_seen[assignment_id] = today.isoformat()
                     email_subject = f"New Assignment in {course_data['course_name']}"
-                    email_body = f"New assignment: {assignment['title']} due in {assignment['due_date']}"
-                    self.send_email(recipient_email, email_subject, email_body)
+                    email_body = f"New assignment: {assignment['title']}"
+                    email_body_due_date = email_body + f" due in {assignment['due_date']}"
+                    self.send_email(recipient_email, email_subject, email_body_due_date)
 
                 elif due_date - today == timedelta(days=3):
                     email_subject = f"Upcoming Assignment Due in {course_data['course_name']}"
