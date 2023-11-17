@@ -49,7 +49,7 @@ class GoogleClassroomAPI:
         classroom_service = build("classroom", "v1", credentials=credentials)
         user_info_service = build("oauth2", "v2", credentials=credentials)
         return classroom_service, user_info_service
-    
+
     def get_user_email(self):
         """
         Retrieves the email address of the authenticated user.
@@ -59,7 +59,7 @@ class GoogleClassroomAPI:
         """
         user_info = self.user_info_service.userinfo().get().execute()
         return user_info.get('email')
-    
+
     def send_email(self, recipient_email, subject, body):
         """
         Sends an email to the specified recipient.
@@ -82,7 +82,7 @@ class GoogleClassroomAPI:
         # Send the email and close the connection
         server.send_message(msg)
         server.quit()
-    
+
     def load_seen_assignments(self):
         """Load seen assignments from a file."""
         try:
