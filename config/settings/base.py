@@ -4,6 +4,7 @@ Base settings to build other settings files upon.
 from pathlib import Path
 
 import environ
+from decouple import config
 
 BASE_DIR = Path(__file__).resolve(strict=True).parent.parent.parent
 APPS_DIR = BASE_DIR / "planmebackend"
@@ -352,7 +353,7 @@ SPECTACULAR_SETTINGS = {
     "SERVE_PERMISSIONS": ["rest_framework.permissions.IsAdminUser"],
 }
 # Google OAuth Configuration
-# TOKEN_URL = env("TOKEN_URL", "")
-# GOOGLE_CLIENT_ID = env("GOOGLE_CLIENT_ID", "")
-# GOOGLE_CLIENT_SECRET = env("GOOGLE_CLIENT_SECRET", "")
-# REDIRECT_URI = env("REDIRECT_URI", "")
+TOKEN_URL = config("TOKEN_URL", "")
+GOOGLE_CLIENT_ID = config("GOOGLE_CLIENT_ID", "")
+GOOGLE_CLIENT_SECRET = config("GOOGLE_CLIENT_SECRET", "")
+REDIRECT_URI = config("REDIRECT_URI", "")
