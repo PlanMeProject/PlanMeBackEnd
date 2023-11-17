@@ -6,11 +6,7 @@ about new or upcoming assignments. The main class, GoogleClassroomAPI, encapsula
 all the necessary methods to interact with the Google Classroom services.
 """
 
-from datetime import datetime, timedelta
-import json
-import smtplib
-from email.mime.multipart import MIMEMultipart
-from email.mime.text import MIMEText
+from datetime import datetime
 from googleapiclient.discovery import build
 from flow import InstalledAppFlow
 
