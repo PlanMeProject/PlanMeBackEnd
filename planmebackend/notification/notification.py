@@ -1,10 +1,18 @@
+"""
+This module provides integration with Google Classroom API for retrieving and managing
+course and assignment information. It includes functionalities to authenticate with
+Google Classroom, fetch course and assignment details, and send email notifications
+about new or upcoming assignments. The main class, GoogleClassroomAPI, encapsulates
+all the necessary methods to interact with the Google Classroom services.
+"""
+
 from datetime import datetime, timedelta
 import json
 import smtplib
 from email.mime.multipart import MIMEMultipart
 from email.mime.text import MIMEText
-from flow import InstalledAppFlow
 from googleapiclient.discovery import build
+from flow import InstalledAppFlow
 
 
 class GoogleClassroomAPI:
@@ -44,7 +52,7 @@ class GoogleClassroomAPI:
 
         flow = InstalledAppFlow.from_client_secrets_file("credentials.json", scopes)
         flow.redirect_uri = 'http://localhost:57747/'
-        local_server, wsgi_app, auth_url = flow.run_local_server(port=0, open_browser=False)
+        local_server, wsgi_app = flow.run_local_server(port=0, open_browser=False)
         credentials = flow.get_credentials(wsgi_app, local_server)
         classroom_service = build("classroom", "v1", credentials=credentials)
         user_info_service = build("oauth2", "v2", credentials=credentials)
@@ -86,14 +94,14 @@ class GoogleClassroomAPI:
     def load_seen_assignments(self):
         """Load seen assignments from a file."""
         try:
-            with open('assignments_seen.json', 'r') as file:
+            with open('assignments_seen.json', 'r', encoding='utf-8') as file:
                 return json.load(file)
         except FileNotFoundError:
             return {}
 
     def save_seen_assignments(self):
         """Save seen assignments to a file."""
-        with open('assignments_seen.json', 'w') as file:
+        with open('assignments_seen.json', 'w', encoding='utf-8') as file:
             json.dump(self.assignments_seen, file)
 
     def check_for_new_assignments(self):
@@ -149,7 +157,8 @@ class GoogleClassroomAPI:
         Returns:
             Dict: A dictionary containing course works.
         """
-        coursework_results = self.classroom_service.courses().courseWork().list(courseId=course_id).execute()
+        coursework_results = self.classroom_service.courses().courseWork().list(
+            courseId=course_id).execute()
         return coursework_results
 
     def get_student_submissions_batch(self, course_id, assignment_ids):
@@ -232,13 +241,17 @@ class GoogleClassroomAPI:
         # Assignments Information
         assignments = self.get_works(course_data["course_id"]).get("courseWork", [])
         assignment_ids = [assignment["id"] for assignment in assignments]
-        student_submissions = self.get_student_submissions_batch(course_data["course_id"], assignment_ids)
+        student_submissions = self.get_student_submissions_batch(
+            course_data["course_id"], assignment_ids)
 
         assignments_info = []
         for assignment in assignments:
-            submissions = student_submissions.get(assignment["id"], {}).get("studentSubmissions", [])
+            submissions = student_submissions.get(assignment["id"], {}).get(
+                "studentSubmissions", [])
 
-            not_done_submissions = [s for s in submissions if s.get("state") not in ["TURNED_IN", "RETURNED"]]
+            not_done_submissions = [
+                s for s in submissions if s.get("state") not in ["TURNED_IN", "RETURNED"]
+                ]
 
             if not not_done_submissions:
                 continue
