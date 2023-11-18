@@ -4,7 +4,7 @@ import logging
 from rest_framework import status
 
 from planmebackend.app.models import SubTask
-from planmebackend.utils.setupTest import BaseTestCase
+from planmebackend.utils.setup_test import BaseTestCase
 
 
 class NLPTestCase(BaseTestCase):

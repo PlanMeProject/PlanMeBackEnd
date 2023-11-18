@@ -36,15 +36,31 @@ class Task(AbstractModel):
         ordering = ["due_date"]
 
     title = models.CharField(max_length=255)
-    description = models.TextField()
-    summarized_text = models.TextField()
-    due_date = models.DateField()
+    description = models.TextField(null=True, blank=True, default=None)
+    summarized_text = models.TextField(null=True, blank=True, default=None)
+    due_date = models.DateField(null=True, blank=True, default=None)
     status = models.CharField(max_length=255)
+    course = models.CharField(max_length=255, null=True, blank=True, default=None)
     user = models.ForeignKey(User, on_delete=models.CASCADE, related_name="tasks")
 
     def __str__(self):
         """Unicode's representation of Task."""
         return self.title
+
+
+class DeletedTask(AbstractModel):
+    """Model definition for DeletedTask."""
+
+    class Meta:
+        """Meta definition for DeletedTask."""
+
+        verbose_name = "DeletedTask"
+        verbose_name_plural = "DeletedTasks"
+        ordering = ["id"]
+
+    title = models.CharField(max_length=255)
+    course = models.CharField(max_length=255, null=True, blank=True, default=None)
+    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name="deleted_tasks")
 
 
 class SubTask(AbstractModel):
@@ -58,8 +74,8 @@ class SubTask(AbstractModel):
         verbose_name_plural = "SubTasks"
         ordering = ["id"]
 
-    title = models.CharField(max_length=255)
-    status = models.CharField(max_length=255)
+    title = models.CharField(max_length=255, null=True, blank=True, default="No title")
+    status = models.CharField(max_length=255, null=True, blank=True, default="Todo")
     task = models.ForeignKey(Task, on_delete=models.CASCADE, related_name="subtasks")
 
     def __str__(self):

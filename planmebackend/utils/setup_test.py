@@ -1,7 +1,7 @@
 from rest_framework.authtoken.models import Token
 from rest_framework.test import APIClient, APITestCase
 
-from planmebackend.app.models import SubTask, Task, User
+from planmebackend.app.models import DeletedTask, SubTask, Task, User
 
 
 class BaseTestCase(APITestCase):
@@ -18,9 +18,14 @@ class BaseTestCase(APITestCase):
             status="Pending",
             user=self.user,
         )
+        self.deleted_task = DeletedTask.objects.create(
+            title="Test Task",
+            user=self.user,
+        )
         self.subtask = SubTask.objects.create(title="Test SubTask", status="Pending", task=self.task)
         self.user_url = "/api/users/"
         self.task_url = f"/api/users/{self.user.id}/tasks/"
+        self.deleted_task_url = f"/api/users/{self.user.id}/deleted-tasks/"
         self.subtask_url = f"/api/users/{self.user.id}/tasks/{self.task.id}/subtasks/"
         self.tts_url = "/api/tts/"
         self.summarize_url = "/api/summarize/"

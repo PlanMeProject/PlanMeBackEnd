@@ -2,7 +2,7 @@ import logging
 
 from rest_framework import status
 
-from planmebackend.utils.setupTest import BaseTestCase
+from planmebackend.utils.setup_test import BaseTestCase
 
 
 class SubTaskTestCase(BaseTestCase):
