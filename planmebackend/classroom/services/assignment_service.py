@@ -1,3 +1,4 @@
+"""The module defines the AssignmentsService class."""
 from django.contrib.auth import get_user_model
 
 from planmebackend.app.models import DeletedTask, Task
@@ -6,8 +7,11 @@ from .google_classroom_service import GoogleClassroomAPI
 
 
 class AssignmentsService:
+    """Class definition for AssignmentsService."""
+
     @staticmethod
     def get_user(user_id):
+        """Get user by id."""
         User = get_user_model()
         try:
             return User.objects.get(id=user_id)
@@ -15,6 +19,7 @@ class AssignmentsService:
             raise Exception("User not found")
 
     def process_courses(self, courses, access_token, check_status, user):
+        """Process courses from Google Classroom."""
         new_tasks = []
         for course in courses:
             course_id = course.get("title", {}).get("id", "")
@@ -26,6 +31,7 @@ class AssignmentsService:
         return new_tasks
 
     def process_assignments(self, assignments, course_id, course_name, access_token, check_status, user):
+        """Process assignments from Google Classroom."""
         tasks = []
         for assignment in assignments:
             if Task.objects.filter(title=assignment.get("title", ""), user=user).exists():
@@ -43,6 +49,7 @@ class AssignmentsService:
 
     @staticmethod
     def create_task_from_assignment(assignment, due_date, user, course_name):
+        """Create task from assignment."""
         return Task(
             title=assignment.get("title", ""),
             description=assignment.get("description", ""),

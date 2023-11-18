@@ -1,3 +1,4 @@
+"""The module defines the CoursesViewSet class."""
 import logging
 
 from rest_framework import status, viewsets
@@ -7,7 +8,10 @@ from planmebackend.classroom.services import CoursesService
 
 
 class CoursesViewSet(viewsets.ViewSet):
+    """Class definition for CoursesViewSet."""
+
     def create(self, request, *args, **kwargs):
+        """Get courses from Google Classroom."""
         access_token = request.data.get("access_token")
         if not access_token:
             return Response({"error": "Access token not found in session"}, status=status.HTTP_400_BAD_REQUEST)
