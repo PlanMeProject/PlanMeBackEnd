@@ -10,12 +10,10 @@ from planmebackend.nlp.apps import NlpConfig
 
 
 class TTSViewSet(viewsets.ViewSet):
-    """
-    ViewSet to process text and update SubTask entries in the database.
-    """
+    """ViewSet to process text and update SubTask entries in the database."""
 
     def create(self, request, *args, **kwargs):
-        """The method to process text and update SubTask entries in the database."""
+        """Create new SubTask entries based on the input text."""
         input_text = request.data.get("text")
         task_id = request.data.get("task_id")
         generated_text = self.perform_inference(input_text)
@@ -38,7 +36,7 @@ class TTSViewSet(viewsets.ViewSet):
 
     @staticmethod
     def perform_inference(input_text):
-        """The method to perform inference on the input text."""
+        """Perform inference on the input text."""
         model = NlpConfig.tts_model
         tokenizer = NlpConfig.tokenizer
         model.eval()
