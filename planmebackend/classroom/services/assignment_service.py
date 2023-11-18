@@ -1,6 +1,6 @@
 from django.contrib.auth import get_user_model
 
-from planmebackend.app.models import Task
+from planmebackend.app.models import DeletedTask, Task
 
 from .google_classroom_service import GoogleClassroomAPI
 
@@ -29,6 +29,9 @@ class AssignmentsService:
         tasks = []
         for assignment in assignments:
             if Task.objects.filter(title=assignment.get("title", ""), user=user).exists():
+                continue
+
+            if DeletedTask.objects.filter(title=assignment.get("title", ""), user=user).exists():
                 continue
 
             if check_status and GoogleClassroomAPI.should_skip_assignment(access_token, course_id, assignment):
