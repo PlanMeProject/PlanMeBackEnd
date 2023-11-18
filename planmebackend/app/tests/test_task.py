@@ -1,3 +1,4 @@
+"""The module for tests the Task model."""
 import logging
 
 from rest_framework import status
@@ -20,6 +21,7 @@ class TaskTestCase(BaseTestCase):
         self.assertEqual(status.HTTP_200_OK, response.status_code)
 
     def test_create_task(self):
+        """Test the API for creating a task."""
         data = {
             "data": {
                 "type": "TaskViewSet",
@@ -59,7 +61,6 @@ class TaskTestCase(BaseTestCase):
 
     def test_delete_task(self):
         """Test the API for deleting a task and creating a deleted task record."""
-
         response = self.client.delete(f"{self.task_url}{self.task.id}/")
         self.assertEqual(status.HTTP_204_NO_CONTENT, response.status_code)
 
