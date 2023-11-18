@@ -2,7 +2,7 @@ from django.conf import settings
 from rest_framework.routers import DefaultRouter, SimpleRouter
 from rest_framework_nested import routers
 
-from planmebackend.app.views import SubTaskViewSet, TaskViewSet, UserViewSet
+from planmebackend.app.views import DeletedTaskViewSet, SubTaskViewSet, TaskViewSet, UserViewSet
 from planmebackend.classroom.views import AssignmentsViewSet, AuthorizationViewSet, CoursesViewSet
 from planmebackend.nlp.views import SummarizeViewSet, TTSViewSet
 
@@ -20,6 +20,7 @@ router.register("summarize", SummarizeViewSet, basename="summarize")
 
 users_router = routers.NestedSimpleRouter(router, "users", lookup="user")
 users_router.register("tasks", TaskViewSet, basename="user-tasks")
+users_router.register("deleted-tasks", DeletedTaskViewSet, basename="user-deleted-tasks")
 
 tasks_router = routers.NestedSimpleRouter(users_router, "tasks", lookup="task")
 tasks_router.register("subtasks", SubTaskViewSet, basename="task-subtask")

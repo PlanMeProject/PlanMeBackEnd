@@ -1,7 +1,7 @@
 """Serializers for the api app."""
 from rest_framework import serializers
 
-from planmebackend.app.models import SubTask, Task, User
+from planmebackend.app.models import DeletedTask, SubTask, Task, User
 
 
 class UserSerializer(serializers.ModelSerializer):
@@ -21,6 +21,16 @@ class TaskSerializer(serializers.ModelSerializer):
         """Meta definition for Task."""
 
         model = Task
+        fields = "__all__"
+
+
+class DeletedTaskSerializer(serializers.ModelSerializer):
+    """Serializer definition for Deleted Task."""
+
+    class Meta:
+        """Meta definition for Deleted Task."""
+
+        model = DeletedTask
         fields = "__all__"
 
 
