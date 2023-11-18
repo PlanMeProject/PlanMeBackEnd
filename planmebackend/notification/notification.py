@@ -18,7 +18,7 @@ class NotificationSystem:
     A system to send notifications about new assignments or upcoming deadlines
     based on information from a classroom API.
     """
-    def __init__(self, classroom_api):
+    def __init__(self):
         """
         Initialize the NotificationSystem with a classroom API.
         """
