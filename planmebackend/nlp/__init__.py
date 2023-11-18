@@ -1,0 +1,1 @@
+"""Initalize the nlp app."""
