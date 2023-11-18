@@ -2,6 +2,7 @@ import logging
 
 from rest_framework import status
 
+from planmebackend.app.models import DeletedTask, Task
 from planmebackend.utils.setup_test import BaseTestCase
 
 
@@ -57,6 +58,15 @@ class TaskTestCase(BaseTestCase):
         self.assertEqual(status.HTTP_200_OK, response.status_code)
 
     def test_delete_task(self):
-        """Test the API for deleting a task."""
+        """Test the API for deleting a task and creating a deleted task record."""
+
         response = self.client.delete(f"{self.task_url}{self.task.id}/")
         self.assertEqual(status.HTTP_204_NO_CONTENT, response.status_code)
+
+        with self.assertRaises(Task.DoesNotExist):
+            Task.objects.get(id=self.task.id)
+
+        deleted_task_exists = DeletedTask.objects.filter(
+            title=self.task.title, course=self.task.course, user=self.task.user
+        ).exists()
+        self.assertTrue(deleted_task_exists)

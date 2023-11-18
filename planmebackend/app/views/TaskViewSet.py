@@ -3,7 +3,7 @@ from django.core.exceptions import ObjectDoesNotExist
 from rest_framework import status, viewsets
 from rest_framework.response import Response
 
-from planmebackend.app.models import Task
+from planmebackend.app.models import DeletedTask, Task
 from planmebackend.app.serializers import TaskSerializer
 
 
@@ -62,10 +62,18 @@ class TaskViewSet(viewsets.ViewSet):
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
     def destroy(self, request, pk=None, **kwargs):
-        """Delete a Task object by ID."""
+        """Delete a Task object by ID and create a DeletedTask record."""
         try:
             task = Task.objects.get(id=pk)
         except ObjectDoesNotExist:
             return Response({"error": "Task not found"}, status=status.HTTP_404_NOT_FOUND)
+
+        deleted_task = DeletedTask(
+            title=task.title,
+            course=task.course,
+            user=task.user,
+        )
+
+        deleted_task.save()
         task.delete()
         return Response(status=status.HTTP_204_NO_CONTENT)
