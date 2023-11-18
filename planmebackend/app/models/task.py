@@ -1,3 +1,4 @@
+"""The module defines the Task model."""
 from django.db import models
 
 from planmebackend.utils.model_abstracts import AbstractModel
