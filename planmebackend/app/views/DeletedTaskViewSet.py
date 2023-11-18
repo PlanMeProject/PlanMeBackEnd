@@ -8,9 +8,7 @@ from planmebackend.app.serializers import DeletedTaskSerializer
 
 
 class DeletedTaskViewSet(viewsets.ViewSet):
-    """
-    ViewSet for handling Deleted-Task-related operations.
-    """
+    """ViewSet for handling Deleted-Task-related operations."""
 
     def list(self, request, user_pk=None):
         """List all Deleted Task objects for a specific user and specific courses."""
