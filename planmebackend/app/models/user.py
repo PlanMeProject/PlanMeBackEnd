@@ -1,0 +1,18 @@
+from django.contrib.auth.models import AbstractUser
+from django.db import models
+
+from planmebackend.utils.model_abstracts import AbstractModel
+
+
+class User(AbstractUser, AbstractModel):
+    """Model definition for User."""
+
+    class Meta:
+        """Meta definition for User."""
+
+        app_label = "app"
+        verbose_name = "User"
+        verbose_name_plural = "Users"
+        ordering = ["id"]
+
+    token = models.CharField(max_length=255)
