@@ -9,7 +9,9 @@ import json
 import smtplib
 from email.mime.multipart import MIMEMultipart
 from email.mime.text import MIMEText
-from datetime import datetime, timedelta
+from datetime import datetime
+from planmebackend.app.models import User, Task
+
 
 class NotificationSystem:
     """
@@ -20,21 +22,24 @@ class NotificationSystem:
         """
         Initialize the NotificationSystem with a classroom API.
         """
-        self.classroom_api = classroom_api
         self.assignments_seen = self.load_seen_assignments()
 
-    def send_email(self, recipient_email, subject, body):
+    def send_email(self, recipient_email, subject, body, html=False):
         """
         Send an email with the given recipient, subject, and body.
         """
         sender_email = "planmeproject.app@gmail.com"
-        password = "your_password_here"  # Password should be secured
+        password = "gopc cpyi lzhi blnx"
 
-        msg = MIMEMultipart()
+        msg = MIMEMultipart('alternative')
         msg['From'] = sender_email
         msg['To'] = recipient_email
         msg['Subject'] = subject
-        msg.attach(MIMEText(body, 'plain'))
+
+        if html:
+            msg.attach(MIMEText(body, 'html'))
+        else:
+            msg.attach(MIMEText(body, 'plain'))
 
         server = smtplib.SMTP('smtp.gmail.com', 587)
         server.starttls()
@@ -61,32 +66,83 @@ class NotificationSystem:
 
     def check_for_new_assignments(self):
         """
-        Check for new assignments and send notifications accordingly.
+        Check for new tasks and send an HTML table of all tasks to the user.
         """
         today = datetime.today().date()
-        recipient_email = self.classroom_api.get_user_email()
-        courses = self.classroom_api.get_courses()
+        
+        # Query all users
+        for user in User.objects.all():
+            recipient_email = user.email
+            tasks = user.tasks.filter(due_date__gte=today)
 
-        for course in courses:
-            course_data, assignments_info = self.classroom_api.course_information(course)
+            assignments_list = []
 
-            for assignment in assignments_info:
-                assignment_id = f"{assignment['course_id']}_{assignment['title']}"
-                if assignment['due_date']:
-                    due_date = datetime.strptime(assignment['due_date'], '%Y-%m-%d').date()
-                else:
-                    continue
+            for task in tasks:
+                task_id = f"{task.id}_{task.title}"
+                due_date = task.due_date if task.due_date else None
 
-                if assignment_id not in self.assignments_seen:
-                    self.assignments_seen[assignment_id] = today.isoformat()
-                    email_subject = f"New Assignment in {course_data['course_name']}"
-                    email_body = f"New assignment: {assignment['title']}"
-                    email_body_due_date = email_body + f" due in {assignment['due_date']}"
-                    self.send_email(recipient_email, email_subject, email_body_due_date)
+                if due_date and (task_id not in self.assignments_seen):
+                    self.assignments_seen[task_id] = today.isoformat()
+                    assignments_list.append({
+                        'course_name': 'N/A',
+                        'title': task.title,
+                        'due_date': due_date.strftime('%Y-%m-%d')
+                    })
 
-                elif due_date - today == timedelta(days=3):
-                    email_subject = f"Upcoming Assignment Due in {course_data['course_name']}"
-                    email_body = f"{assignment['title']} is due in 3 days"
-                    self.send_email(recipient_email, email_subject, email_body)
+        # Formatting the assignments into an HTML table
+        email_body = """
+            <html>
+                <head>
+                    <style>
+                        table {
+                            width: 100%;
+                            border-collapse: collapse;
+                        }
+                        th, td {
+                            border: 1px solid black;
+                            padding: 8px;
+                            text-align: left;
+                        }
+                        th {
+                            background-color: #f2f2f2;
+                        }
+                    </style>
+                </head>
+                <body>
+                    <h2>List of Assignments</h2>
+                    <table>
+                        <tr>
+                            <th>Course Name</th>
+                            <th>Assignment Title</th>
+                            <th>Due Date</th>
+                        </tr>
+        """
+
+        for assignment in assignments_list:
+            email_body += f"""
+                <tr>
+                    <td>{assignment['course_name']}</td>
+                    <td>{assignment['title']}</td>
+                    <td>{assignment['due_date']}</td>
+                </tr>
+            """
+
+        email_body += """
+                    </table>
+                </body>
+            </html>
+        """
+
+        # Send the email if there are new assignments
+        if assignments_list:
+            email_subject = "Your Task Overview"
+            self.send_email(recipient_email, email_subject, email_body, html=True)
 
         self.save_seen_assignments()
+
+def main():
+    notification_system = NotificationSystem()
+    notification_system.check_for_new_assignments()
+
+if __name__ == "__main__":
+    main()
