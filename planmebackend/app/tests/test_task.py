@@ -54,13 +54,15 @@ class TaskTestCase(BaseTestCase):
                 },
             }
         }
-        response = self.client.put(f"{self.task_url}{self.task.id}/", data, format="vnd.api+json")
+        response = self.client.put(
+            f"{self.task_url}{self.task.id}/", data, format="vnd.api+json"
+        )
         if response.status_code != status.HTTP_200_OK:
             logging.error("Update Task Error:  %s", response.data)
         self.assertEqual(status.HTTP_200_OK, response.status_code)
 
     def test_delete_task(self):
-        """Test the API for deleting a task and creating a deleted task record."""
+        """Test the API for deleting a task and creating a deleted task."""
         response = self.client.delete(f"{self.task_url}{self.task.id}/")
         self.assertEqual(status.HTTP_204_NO_CONTENT, response.status_code)
 

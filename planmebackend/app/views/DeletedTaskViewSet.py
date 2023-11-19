@@ -11,11 +11,14 @@ class DeletedTaskViewSet(viewsets.ViewSet):
     """ViewSet for handling Deleted-Task-related operations."""
 
     def list(self, request, user_pk=None):
-        """List all Deleted Task objects for a specific user and specific courses."""
+        """List all Deleted Task objects for the user and courses."""
         user_pk = request.query_params.get("user_id", None)
 
         if not user_pk:
-            return Response({"error": "User ID is required"}, status=status.HTTP_400_BAD_REQUEST)
+            return Response(
+                {"error": "User ID is required"},
+                status=status.HTTP_400_BAD_REQUEST,
+            )
 
         queryset = DeletedTask.objects.filter(user_id=user_pk)
         serializer = DeletedTaskSerializer(queryset, many=True)
@@ -36,6 +39,9 @@ class DeletedTaskViewSet(viewsets.ViewSet):
         try:
             task = DeletedTask.objects.get(id=pk)
         except ObjectDoesNotExist:
-            return Response({"error": "Deleted Task not found"}, status=status.HTTP_404_NOT_FOUND)
+            return Response(
+                {"error": "Deleted Task not found"},
+                status=status.HTTP_404_NOT_FOUND,
+            )
         task.delete()
         return Response(status=status.HTTP_204_NO_CONTENT)
