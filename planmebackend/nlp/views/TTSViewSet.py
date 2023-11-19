@@ -23,14 +23,22 @@ class TTSViewSet(viewsets.ViewSet):
         for subtask_title in generated_subtasks:
             subtask_title = subtask_title.strip()
             if subtask_title:
-                subtask_data_list.append(SubTask(title=subtask_title, task_id=task_id, status="Todo"))
+                subtask_data_list.append(
+                    SubTask(
+                        title=subtask_title, task_id=task_id, status="Todo"
+                    )
+                )
 
         with transaction.atomic():
             SubTask.objects.filter(task_id=task_id).delete()
 
-            new_subtasks_instances = SubTask.objects.bulk_create(subtask_data_list)
+            new_subtasks_instances = SubTask.objects.bulk_create(
+                subtask_data_list
+            )
 
-        new_subtasks_data = SubTaskSerializer(new_subtasks_instances, many=True).data
+        new_subtasks_data = SubTaskSerializer(
+            new_subtasks_instances, many=True
+        ).data
 
         return Response(new_subtasks_data, status=status.HTTP_201_CREATED)
 
@@ -40,7 +48,9 @@ class TTSViewSet(viewsets.ViewSet):
         model = NlpConfig.tts_model
         tokenizer = NlpConfig.tokenizer
         model.eval()
-        input_tensor = tokenizer.encode(input_text, return_tensors="pt").to("cpu")
+        input_tensor = tokenizer.encode(input_text, return_tensors="pt").to(
+            "cpu"
+        )
 
         with torch.no_grad():
             output = model.generate(input_tensor, max_length=1024)

@@ -16,7 +16,10 @@ class TaskViewSet(viewsets.ViewSet):
         courses = request.query_params.getlist("courses", None)
 
         if not user_pk:
-            return Response({"error": "User ID is required"}, status=status.HTTP_400_BAD_REQUEST)
+            return Response(
+                {"error": "User ID is required"},
+                status=status.HTTP_400_BAD_REQUEST,
+            )
         if not courses:
             queryset = Task.objects.none()
         else:
@@ -40,7 +43,9 @@ class TaskViewSet(viewsets.ViewSet):
         try:
             task = Task.objects.get(id=pk)
         except ObjectDoesNotExist:
-            return Response({"error": "Task not found"}, status=status.HTTP_404_NOT_FOUND)
+            return Response(
+                {"error": "Task not found"}, status=status.HTTP_404_NOT_FOUND
+            )
         serializer = TaskSerializer(task)
         return Response(serializer.data, status=status.HTTP_200_OK)
 
@@ -49,7 +54,9 @@ class TaskViewSet(viewsets.ViewSet):
         try:
             task = Task.objects.get(id=pk)
         except ObjectDoesNotExist:
-            return Response({"error": "Task not found"}, status=status.HTTP_404_NOT_FOUND)
+            return Response(
+                {"error": "Task not found"}, status=status.HTTP_404_NOT_FOUND
+            )
         data = request.data
         data["user"] = user_pk
 
@@ -64,7 +71,9 @@ class TaskViewSet(viewsets.ViewSet):
         try:
             task = Task.objects.get(id=pk)
         except ObjectDoesNotExist:
-            return Response({"error": "Task not found"}, status=status.HTTP_404_NOT_FOUND)
+            return Response(
+                {"error": "Task not found"}, status=status.HTTP_404_NOT_FOUND
+            )
 
         deleted_task = DeletedTask(
             title=task.title,

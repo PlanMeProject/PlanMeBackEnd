@@ -22,7 +22,11 @@ class UserTestCase(BaseTestCase):
         data = {
             "data": {
                 "type": "UserViewSet",
-                "attributes": {"username": "NewUser", "password": "NewPassword", "token": self.token.key},
+                "attributes": {
+                    "username": "NewUser",
+                    "password": "NewPassword",
+                    "token": self.token.key,
+                },
             }
         }
         response = self.client.post(self.user_url, data, format="vnd.api+json")
@@ -34,10 +38,15 @@ class UserTestCase(BaseTestCase):
             "data": {
                 "type": "UserViewSet",
                 "id": str(self.user.id),
-                "attributes": {"username": "UpdatedUser", "password": "UpdatedPassword"},
+                "attributes": {
+                    "username": "UpdatedUser",
+                    "password": "UpdatedPassword",
+                },
             }
         }
-        response = self.client.put(f"{self.user_url}{self.user.id}/", data, format="vnd.api+json")
+        response = self.client.put(
+            f"{self.user_url}{self.user.id}/", data, format="vnd.api+json"
+        )
         self.assertEqual(status.HTTP_200_OK, response.status_code)
 
     def test_delete_user(self):

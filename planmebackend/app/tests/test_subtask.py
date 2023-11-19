@@ -21,8 +21,15 @@ class SubTaskTestCase(BaseTestCase):
 
     def test_create_subtask(self):
         """Test the API for creating a subtask."""
-        data = {"data": {"type": "SubTaskViewSet", "attributes": {"title": "New SubTask", "status": "Pending"}}}
-        response = self.client.post(self.subtask_url, data, format="vnd.api+json")
+        data = {
+            "data": {
+                "type": "SubTaskViewSet",
+                "attributes": {"title": "New SubTask", "status": "Pending"},
+            }
+        }
+        response = self.client.post(
+            self.subtask_url, data, format="vnd.api+json"
+        )
         if response.status_code != status.HTTP_201_CREATED:
             logging.error("Create SubTask Error:  %s", response.data)
         self.assertEqual(status.HTTP_201_CREATED, response.status_code)
@@ -33,10 +40,17 @@ class SubTaskTestCase(BaseTestCase):
             "data": {
                 "type": "SubTaskViewSet",
                 "id": str(self.subtask.id),
-                "attributes": {"title": "Updated SubTask", "status": "Complete"},
+                "attributes": {
+                    "title": "Updated SubTask",
+                    "status": "Complete",
+                },
             }
         }
-        response = self.client.put(f"{self.subtask_url}{self.subtask.id}/", data, format="vnd.api+json")
+        response = self.client.put(
+            f"{self.subtask_url}{self.subtask.id}/",
+            data,
+            format="vnd.api+json",
+        )
         if response.status_code != status.HTTP_200_OK:
             logging.error("Update SubTask Error:  %s", response.data)
         self.assertEqual(status.HTTP_200_OK, response.status_code)

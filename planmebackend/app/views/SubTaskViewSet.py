@@ -31,7 +31,10 @@ class SubTaskViewSet(viewsets.ViewSet):
         try:
             subtask = SubTask.objects.get(id=pk)
         except ObjectDoesNotExist:
-            return Response({"error": "SubTask not found"}, status=status.HTTP_404_NOT_FOUND)
+            return Response(
+                {"error": "SubTask not found"},
+                status=status.HTTP_404_NOT_FOUND,
+            )
         serializer = SubTaskSerializer(subtask)
         return Response(serializer.data, status=status.HTTP_200_OK)
 
@@ -40,8 +43,13 @@ class SubTaskViewSet(viewsets.ViewSet):
         try:
             subtask = SubTask.objects.get(id=pk)
         except ObjectDoesNotExist:
-            return Response({"error": "SubTask not found"}, status=status.HTTP_404_NOT_FOUND)
-        serializer = SubTaskSerializer(subtask, data=request.data, partial=True)
+            return Response(
+                {"error": "SubTask not found"},
+                status=status.HTTP_404_NOT_FOUND,
+            )
+        serializer = SubTaskSerializer(
+            subtask, data=request.data, partial=True
+        )
         if serializer.is_valid():
             serializer.save()
             return Response(serializer.data, status=status.HTTP_200_OK)
@@ -53,7 +61,10 @@ class SubTaskViewSet(viewsets.ViewSet):
             subtask = SubTask.objects.get(id=pk)
 
         except ObjectDoesNotExist:
-            return Response({"error": "SubTask not found"}, status=status.HTTP_404_NOT_FOUND)
+            return Response(
+                {"error": "SubTask not found"},
+                status=status.HTTP_404_NOT_FOUND,
+            )
 
         subtask.delete()
         return Response(status=status.HTTP_204_NO_CONTENT)

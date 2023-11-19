@@ -5,7 +5,10 @@ from rest_framework import status, viewsets
 from rest_framework.response import Response
 
 from planmebackend.app.models import User
-from planmebackend.classroom.services import AuthorizationError, AuthorizationService
+from planmebackend.classroom.services import (
+    AuthorizationError,
+    AuthorizationService,
+)
 
 
 class AuthorizationViewSet(viewsets.ViewSet):
@@ -15,7 +18,10 @@ class AuthorizationViewSet(viewsets.ViewSet):
         """Create user and return token."""
         full_url = request.data.get("full_url")
         if not full_url:
-            return Response({"error": "Full URL not provided"}, status=status.HTTP_400_BAD_REQUEST)
+            return Response(
+                {"error": "Full URL not provided"},
+                status=status.HTTP_400_BAD_REQUEST,
+            )
 
         try:
             service = AuthorizationService()
@@ -27,12 +33,22 @@ class AuthorizationViewSet(viewsets.ViewSet):
             user_profile = service.get_user_profile(tokens["access_token"])
             user_email = user_profile.get("email")
 
-            user, created = User.objects.update_or_create(email=user_email, defaults={"email": user_email})
-            return Response({"user_id": user.id, "token": tokens["access_token"]}, status=status.HTTP_201_CREATED)
+            user, created = User.objects.update_or_create(
+                email=user_email, defaults={"email": user_email}
+            )
+            return Response(
+                {"user_id": user.id, "token": tokens["access_token"]},
+                status=status.HTTP_201_CREATED,
+            )
 
         except AuthorizationError as e:
             logging.error(f"Authorization error: {e}")
-            return Response({"error": str(e)}, status=status.HTTP_400_BAD_REQUEST)
+            return Response(
+                {"error": str(e)}, status=status.HTTP_400_BAD_REQUEST
+            )
         except Exception as e:
             logging.error(f"Internal Server Error: {e}")
-            return Response({"error": "Internal Server Error"}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+            return Response(
+                {"error": "Internal Server Error"},
+                status=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            )

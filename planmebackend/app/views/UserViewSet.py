@@ -21,7 +21,9 @@ class UserViewSet(viewsets.ViewSet):
         try:
             user = User.objects.get(id=pk)
         except ObjectDoesNotExist:
-            return Response({"error": "User not found"}, status=status.HTTP_404_NOT_FOUND)
+            return Response(
+                {"error": "User not found"}, status=status.HTTP_404_NOT_FOUND
+            )
         serializer = UserSerializer(user)
         return Response(serializer.data, status=status.HTTP_200_OK)
 
@@ -38,7 +40,9 @@ class UserViewSet(viewsets.ViewSet):
         try:
             user = User.objects.get(id=pk)
         except ObjectDoesNotExist:
-            return Response({"error": "User not found"}, status=status.HTTP_404_NOT_FOUND)
+            return Response(
+                {"error": "User not found"}, status=status.HTTP_404_NOT_FOUND
+            )
         serializer = UserSerializer(user, data=request.data, partial=True)
         if serializer.is_valid():
             serializer.save()
@@ -50,6 +54,8 @@ class UserViewSet(viewsets.ViewSet):
         try:
             user = User.objects.get(id=pk)
         except ObjectDoesNotExist:
-            return Response({"error": "User not found"}, status=status.HTTP_404_NOT_FOUND)
+            return Response(
+                {"error": "User not found"}, status=status.HTTP_404_NOT_FOUND
+            )
         user.delete()
         return Response(status=status.HTTP_204_NO_CONTENT)
