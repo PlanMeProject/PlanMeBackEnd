@@ -1,34 +1,32 @@
 from .base import *  # noqa
-from .base import env
+from .base import DATABASES, env
 
 # GENERAL
-# ------------------------------------------------------------------------------
-# https://docs.djangoproject.com/en/dev/ref/settings/#secret-key
+# -----------------------------------------------------------------------------
 SECRET_KEY = env("DJANGO_SECRET_KEY")
-# https://docs.djangoproject.com/en/dev/ref/settings/#allowed-hosts
 ALLOWED_HOSTS = env.list("DJANGO_ALLOWED_HOSTS", default=["planme.com"])
 
 # DATABASES
-# ------------------------------------------------------------------------------
-DATABASES["default"]["CONN_MAX_AGE"] = env.int("CONN_MAX_AGE", default=60)  # noqa: F405
+# -----------------------------------------------------------------------------
+DATABASES["default"]["CONN_MAX_AGE"] = env.int(
+    "CONN_MAX_AGE", default=60
+)  # noqa: F405
 
 # CACHES
-# ------------------------------------------------------------------------------
+# -----------------------------------------------------------------------------
 CACHES = {
     "default": {
         "BACKEND": "django_redis.cache.RedisCache",
         "LOCATION": env("REDIS_URL"),
         "OPTIONS": {
             "CLIENT_CLASS": "django_redis.client.DefaultClient",
-            # Mimicing memcache behavior.
-            # https://github.com/jazzband/django-redis#memcached-exceptions-behavior
             "IGNORE_EXCEPTIONS": True,
         },
     }
 }
 
 # SECURITY
-# ------------------------------------------------------------------------------
+# -----------------------------------------------------------------------------
 # https://docs.djangoproject.com/en/dev/ref/settings/#secure-proxy-ssl-header
 SECURE_PROXY_SSL_HEADER = ("HTTP_X_FORWARDED_PROTO", "https")
 # https://docs.djangoproject.com/en/dev/ref/settings/#secure-ssl-redirect
@@ -40,12 +38,14 @@ CSRF_COOKIE_SECURE = True
 # https://docs.djangoproject.com/en/dev/topics/security/#ssl-https
 # https://docs.djangoproject.com/en/dev/ref/settings/#secure-hsts-seconds
 SECURE_HSTS_SECONDS = 60
-# https://docs.djangoproject.com/en/dev/ref/settings/#secure-hsts-include-subdomains
-SECURE_HSTS_INCLUDE_SUBDOMAINS = env.bool("DJANGO_SECURE_HSTS_INCLUDE_SUBDOMAINS", default=True)
+SECURE_HSTS_INCLUDE_SUBDOMAINS = env.bool(
+    "DJANGO_SECURE_HSTS_INCLUDE_SUBDOMAINS", default=True
+)
 # https://docs.djangoproject.com/en/dev/ref/settings/#secure-hsts-preload
 SECURE_HSTS_PRELOAD = env.bool("DJANGO_SECURE_HSTS_PRELOAD", default=True)
-# https://docs.djangoproject.com/en/dev/ref/middleware/#x-content-type-options-nosniff
-SECURE_CONTENT_TYPE_NOSNIFF = env.bool("DJANGO_SECURE_CONTENT_TYPE_NOSNIFF", default=True)
+SECURE_CONTENT_TYPE_NOSNIFF = env.bool(
+    "DJANGO_SECURE_CONTENT_TYPE_NOSNIFF", default=True
+)
 
 # STATIC
 # ------------------------
@@ -58,10 +58,10 @@ STORAGES = {
     },
 }
 # MEDIA
-# ------------------------------------------------------------------------------
+# -----------------------------------------------------------------------------
 
 # EMAIL
-# ------------------------------------------------------------------------------
+# -----------------------------------------------------------------------------
 # https://docs.djangoproject.com/en/dev/ref/settings/#default-from-email
 DEFAULT_FROM_EMAIL = env(
     "DJANGO_DEFAULT_FROM_EMAIL",
@@ -76,23 +76,20 @@ EMAIL_SUBJECT_PREFIX = env(
 )
 
 # ADMIN
-# ------------------------------------------------------------------------------
+# -----------------------------------------------------------------------------
 # Django Admin URL regex.
 ADMIN_URL = env("DJANGO_ADMIN_URL")
 
 # Anymail
-# ------------------------------------------------------------------------------
+# -----------------------------------------------------------------------------
 # https://anymail.readthedocs.io/en/stable/installation/#installing-anymail
 INSTALLED_APPS += ["anymail"]  # noqa: F405
-# https://docs.djangoproject.com/en/dev/ref/settings/#email-backend
-# https://anymail.readthedocs.io/en/stable/installation/#anymail-settings-reference
-# https://anymail.readthedocs.io/en/stable/esps
 EMAIL_BACKEND = "django.core.mail.backends.smtp.EmailBackend"
 ANYMAIL = {}
 
 
 # LOGGING
-# ------------------------------------------------------------------------------
+# -----------------------------------------------------------------------------
 # https://docs.djangoproject.com/en/dev/ref/settings/#logging
 # See https://docs.djangoproject.com/en/dev/topics/logging for
 # more details on how to customize your logging configuration.
@@ -102,10 +99,13 @@ ANYMAIL = {}
 LOGGING = {
     "version": 1,
     "disable_existing_loggers": False,
-    "filters": {"require_debug_false": {"()": "django.services.log.RequireDebugFalse"}},
+    "filters": {
+        "require_debug_false": {"()": "django.services.log.RequireDebugFalse"}
+    },
     "formatters": {
         "verbose": {
-            "format": "%(levelname)s %(asctime)s %(module)s %(process)d %(thread)d %(message)s",
+            "format": "%(levelname)s %(asctime)s %(module)s %(process)d"
+            " %(thread)d %(message)s",
         },
     },
     "handlers": {
@@ -136,10 +136,9 @@ LOGGING = {
 }
 
 # django-rest-framework
-# -------------------------------------------------------------------------------
-# Tools that generate code samples can use SERVERS to point to the correct domain
+# -----------------------------------------------------------------------------
 SPECTACULAR_SETTINGS["SERVERS"] = [  # noqa: F405
     {"url": "https://planme.com", "description": "Production server"},
 ]
 # Your stuff...
-# ------------------------------------------------------------------------------
+# -----------------------------------------------------------------------------
