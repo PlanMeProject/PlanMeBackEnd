@@ -8,9 +8,7 @@ from planmebackend.app.serializers import UserSerializer
 
 
 class UserViewSet(viewsets.ViewSet):
-    """
-    ViewSet for handling User-related operations.
-    """
+    """ViewSet for handling User-related operations."""
 
     def list(self, request):
         """List all User objects."""

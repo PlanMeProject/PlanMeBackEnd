@@ -1,3 +1,4 @@
+"""App config for planmebackend app."""
 import logging
 
 from django.shortcuts import get_object_or_404
@@ -10,7 +11,10 @@ from planmebackend.nlp.apps import NlpConfig
 
 
 class SummarizeViewSet(viewsets.ViewSet):
+    """The viewset for the summarize endpoint."""
+
     def update(self, request, *args, **kwargs):
+        """Update the task with the summarized text."""
         input_text = request.data.get("text")
         task_id = request.data.get("task_id")
 
@@ -35,6 +39,7 @@ class SummarizeViewSet(viewsets.ViewSet):
 
     @staticmethod
     def perform_summary(input_text):
+        """Perform the summarization."""
         try:
             return NlpConfig.summarizer(input_text)[0]["summary_text"]
         except Exception as error:

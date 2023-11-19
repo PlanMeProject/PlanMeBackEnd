@@ -8,9 +8,7 @@ from planmebackend.app.serializers import TaskSerializer
 
 
 class TaskViewSet(viewsets.ViewSet):
-    """
-    ViewSet for handling Task-related operations.
-    """
+    """ViewSet for handling Task-related operations."""
 
     def list(self, request, user_pk=None):
         """List all Task objects for a specific user and specific courses."""

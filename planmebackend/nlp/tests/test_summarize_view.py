@@ -1,3 +1,4 @@
+"""Test cases for SummarizeViewSet."""
 import logging
 import uuid
 

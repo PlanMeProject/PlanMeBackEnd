@@ -1,3 +1,4 @@
+"""The module defines the AuthorizationViewSet class."""
 import logging
 
 from rest_framework import status, viewsets
@@ -8,7 +9,10 @@ from planmebackend.classroom.services import AuthorizationError, AuthorizationSe
 
 
 class AuthorizationViewSet(viewsets.ViewSet):
+    """Class definition for AuthorizationViewSet."""
+
     def create(self, request, *args, **kwargs):
+        """Create user and return token."""
         full_url = request.data.get("full_url")
         if not full_url:
             return Response({"error": "Full URL not provided"}, status=status.HTTP_400_BAD_REQUEST)

@@ -1,3 +1,4 @@
+"""The module for tests the DeletedTask model."""
 import logging
 
 from rest_framework import status

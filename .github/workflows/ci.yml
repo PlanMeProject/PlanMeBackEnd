@@ -8,6 +8,7 @@ on:
   push:
     branches: ['master', 'main']
     paths-ignore: ['docs/**']
+
 jobs:
   build:
     runs-on: self-hosted
@@ -37,6 +38,12 @@ jobs:
     needs: migrate
     runs-on: self-hosted
     steps:
+      - name: Install Flake8 and Flake8-Docstrings
+        run: pip install flake8 flake8-docstrings
+      - name: Run Pydocstyle
+        run: pydocstyle planmebackend --match-dir='^(?!migrations)'
+      - name: Run Flake8
+        run: flake8 planmebackend
       - name: Run API Tests
         run: docker-compose -f local.yml run --rm django pytest -vv
 

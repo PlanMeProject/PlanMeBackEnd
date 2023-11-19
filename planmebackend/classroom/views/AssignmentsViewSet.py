@@ -1,3 +1,4 @@
+"""The module defines the AssignmentsViewSet class."""
 from rest_framework import status, viewsets
 from rest_framework.response import Response
 
@@ -7,7 +8,10 @@ from planmebackend.classroom.services import AssignmentsService
 
 
 class AssignmentsViewSet(viewsets.ViewSet):
+    """Class definition for AssignmentsViewSet."""
+
     def create(self, request, *args, **kwargs):
+        """Create tasks from Google Classroom."""
         data = request.data
         access_token = data.get("access_token")
         courses = data.get("all_courses", {}).get("data", [])

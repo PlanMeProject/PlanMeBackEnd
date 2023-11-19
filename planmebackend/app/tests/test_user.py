@@ -1,3 +1,4 @@
+"""The module for tests the User model."""
 from rest_framework import status
 
 from planmebackend.utils.setup_test import BaseTestCase

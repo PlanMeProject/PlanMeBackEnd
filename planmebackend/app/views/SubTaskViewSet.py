@@ -8,9 +8,7 @@ from planmebackend.app.serializers import SubTaskSerializer
 
 
 class SubTaskViewSet(viewsets.ViewSet):
-    """
-    ViewSet for handling SubTask-related operations.
-    """
+    """ViewSet for handling SubTask-related operations."""
 
     def list(self, request, task_pk=None, **kwargs):
         """List all SubTask objects for a specific task."""
