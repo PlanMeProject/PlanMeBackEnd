@@ -13,5 +13,7 @@ def media_storage(settings, tmpdir):
 def user(db):
     """Create a user for testing."""
     User = get_user_model()
-    user = User.objects.create_user(username="testuser", password="testpass", email="test@example.com")
+    user = User.objects.create_user(
+        username="testuser", password="testpass", email="test@example.com"
+    )
     return user

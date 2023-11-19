@@ -24,27 +24,56 @@ class AssignmentsService:
         for course in courses:
             course_id = course.get("title", {}).get("id", "")
             course_name = course.get("title", {}).get("name", "")
-            assignments = GoogleClassroomAPI.get_course_work(access_token, course_id)
+            assignments = GoogleClassroomAPI.get_course_work(
+                access_token, course_id
+            )
             new_tasks.extend(
-                self.process_assignments(assignments, course_id, course_name, access_token, check_status, user)
+                self.process_assignments(
+                    assignments,
+                    course_id,
+                    course_name,
+                    access_token,
+                    check_status,
+                    user,
+                )
             )
         return new_tasks
 
-    def process_assignments(self, assignments, course_id, course_name, access_token, check_status, user):
+    def process_assignments(
+        self,
+        assignments,
+        course_id,
+        course_name,
+        access_token,
+        check_status,
+        user,
+    ):
         """Process assignments from Google Classroom."""
         tasks = []
         for assignment in assignments:
-            if Task.objects.filter(title=assignment.get("title", ""), user=user).exists():
+            if Task.objects.filter(
+                title=assignment.get("title", ""), user=user
+            ).exists():
                 continue
 
-            if DeletedTask.objects.filter(title=assignment.get("title", ""), user=user).exists():
+            if DeletedTask.objects.filter(
+                title=assignment.get("title", ""), user=user
+            ).exists():
                 continue
 
-            if check_status and GoogleClassroomAPI.should_skip_assignment(access_token, course_id, assignment):
+            if check_status and GoogleClassroomAPI.should_skip_assignment(
+                access_token, course_id, assignment
+            ):
                 continue
 
-            due_date = GoogleClassroomAPI.parse_due_date(assignment.get("dueDate", {}))
-            tasks.append(self.create_task_from_assignment(assignment, due_date, user, course_name))
+            due_date = GoogleClassroomAPI.parse_due_date(
+                assignment.get("dueDate", {})
+            )
+            tasks.append(
+                self.create_task_from_assignment(
+                    assignment, due_date, user, course_name
+                )
+            )
         return tasks
 
     @staticmethod
