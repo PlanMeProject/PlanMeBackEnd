@@ -37,7 +37,11 @@ class AuthorizationViewSet(viewsets.ViewSet):
                 email=user_email, defaults={"email": user_email}
             )
             return Response(
-                {"user_id": user.id, "token": tokens["access_token"]},
+                {
+                    "user_id": user.id,
+                    "token": tokens["access_token"],
+                    "email": user_email,
+                },
                 status=status.HTTP_201_CREATED,
             )
 
