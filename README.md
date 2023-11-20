@@ -1,58 +1,82 @@
 # PlanMeBackEnd
 
-Behold My Awesome Project!
-
 [![Built with Cookiecutter Django](https://img.shields.io/badge/built%20with-Cookiecutter%20Django-ff69b4.svg?logo=cookiecutter)](https://github.com/cookiecutter/cookiecutter-django/)
 [![Black code style](https://img.shields.io/badge/code%20style-black-000000.svg)](https://github.com/ambv/black)
+[![CI](https://github.com/PlanMeProject/PlanMeBackEnd/actions/workflows/ci.yml/badge.svg?branch=main)](https://github.com/PlanMeProject/PlanMeBackEnd/actions/workflows/ci.yml)
 
 License: MIT
 
-## Settings
+## Overview
+This repo contains everything about the backend implementation for PlanMe.
 
-Moved to [settings](http://cookiecutter-django.readthedocs.io/en/latest/settings.html).
+## Technology Stack
+- Django REST Framework
+- PostgreSQL
+- Docker
+- Google OAuth for authentication
+- Other notable Python libraries and tools
 
-## Basic Commands
+## Installation
 
-### Setting Up Your Users
+Follow these steps to set up the backend environment for PlanMe:
 
-- To create a **normal user account**, just go to Sign Up and fill out the form. Once you submit it, you'll see a "Verify Your E-mail Address" page. Go to your console to see a simulated email verification message. Copy the link into your browser. Now the user's email should be verified and ready to go.
+1. **Clone the Repository**
+   - Open your terminal.
+   - Clone the repository using Git:
+     ```
+     git clone https://github.com/PlanMeProject/PlanMeBackEnd.git
+     ```
+   - Navigate into the cloned directory:
+     ```
+     cd PlanMeBackEnd
+     ```
 
-- To create a **superuser account**, use this command:
+2. **Set Up a Virtual Environment (Optional)**
+   - Create a virtual environment:
+     ```
+     python -m venv venv
+     ```
+   - Activate the virtual environment:
+     - On Windows:
+       ```
+       venv\Scripts\activate
+       ```
+     - On MacOS/Linux:
+       ```
+       source venv/bin/activate
+       ```
 
-      $ python manage.py createsuperuser
+3. **Install Dependencies**
+     ```
+     pip install -r requirements.txt
+     ```
 
-For convenience, you can keep your normal user logged in on Chrome and your superuser logged in on Firefox (or similar), so that you can see how the site behaves for both kinds of users.
+4. **Environment Variables**
+   - Set up your environment variables in `.env` files (This should be a secrets).
 
-### Type checks
+5. **Docker Configuration**
+   - Ensure Docker is installed and running on your machine.
+     ```
+     docker-compose -f loyal.yml build
+     ```
+   - The command builds the Docker images as defined in `loyal.yml` file. It might take some time to complete, depending on your Docker configuration and network speed.
 
-Running type checks with mypy:
+## Running the Application
+1. **Database Migrations**
+   - Before using the application, you need to apply database migrations. Run the following command:
+     ```
+     docker-compose -f local.yml run --rm django python manage.py migrate
+     ```
 
-    $ mypy planmebackend
+2. **Running Docker Containers**
+   - After the build is complete, start the containers:
+     ```
+     docker-compose -f loyal.yml up
+     ```
 
-### Test coverage
 
-To run the tests, check your test coverage, and generate an HTML coverage report:
-
-    $ coverage run -m pytest
-    $ coverage html
-    $ open htmlcov/index.html
-
-#### Running tests with pytest
-
-    $ pytest
-
-### Live reloading and Sass CSS compilation
-
-Moved to [Live reloading and SASS compilation](https://cookiecutter-django.readthedocs.io/en/latest/developing-locally.html#sass-compilation-live-reloading).
-
-## Deployment
-
-The following details how to deploy this application.
-
-### Heroku
-
-See detailed [cookiecutter-django Heroku documentation](http://cookiecutter-django.readthedocs.io/en/latest/deployment-on-heroku.html).
-
-### Docker
-
-See detailed [cookiecutter-django Docker documentation](http://cookiecutter-django.readthedocs.io/en/latest/deployment-with-docker.html).
+## Testing
+   - To run the tests, run the following command:
+    ```
+    docker-compose -f local.yml run --rm django pytest -vv
+    ```
