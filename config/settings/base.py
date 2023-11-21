@@ -3,8 +3,6 @@ Base settings to build other settings files upon.
 """
 from pathlib import Path
 
-import dj_database_url
-import django_heroku
 import environ
 from decouple import config
 
@@ -28,9 +26,18 @@ LOCALE_PATHS = [str(BASE_DIR / "locale")]
 
 # DATABASES
 # -----------------------------------------------------------------------------
-DATABASES = {"default": dj_database_url.config(conn_max_age=600)}
+DATABASES = {
+    "default": {
+        "ENGINE": "django.db.backends.postgresql",
+        "NAME": "planmebackend",
+        "USER": "debug",
+        "PASSWORD": "debug",
+        "HOST": "postgres",
+        "PORT": 5432,
+        "ATOMIC_REQUESTS": True,
+    }
+}
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
-django_heroku.settings(locals())
 # URLS
 # -----------------------------------------------------------------------------
 ROOT_URLCONF = "config.urls"

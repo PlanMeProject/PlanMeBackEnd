@@ -1,5 +1,8 @@
+import dj_database_url
+import django_heroku
+
 from .base import *  # noqa
-from .base import DATABASES, env
+from .base import env
 
 # GENERAL
 # -----------------------------------------------------------------------------
@@ -8,6 +11,8 @@ ALLOWED_HOSTS = env.list("DJANGO_ALLOWED_HOSTS", default=["planme.com"])
 
 # DATABASES
 # -----------------------------------------------------------------------------
+DATABASES = {"default": dj_database_url.config(conn_max_age=600)}
+django_heroku.settings(locals())
 DATABASES["default"]["CONN_MAX_AGE"] = env.int(
     "CONN_MAX_AGE", default=60
 )  # noqa: F405
