@@ -30,3 +30,5 @@ google-api-python-client>=2.104.0
 # NLP model
 torch>=2.1.0
 transformers>=4.35.0
+# Env
+python-decouple>=3.8
