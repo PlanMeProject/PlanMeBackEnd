@@ -22,6 +22,7 @@ crispy-bootstrap5>=0.7
 django-extensions>=3.2.3
 django-allauth>=0.57.0
 django-redis>=5.4.0
+django-debug-toolbar>=4.2.0
 # DRF-spectacular for api documentation
 drf-spectacular>=0.26.5  # https://github.com/tfranzel/drf-spectacular
 # Google Classroom API
