@@ -54,6 +54,8 @@ SECURE_CONTENT_TYPE_NOSNIFF = env.bool(
 
 # STATIC
 # ------------------------
+# STATIC
+# ------------------------
 STORAGES = {
     "default": {
         "BACKEND": "django.core.files.storage.FileSystemStorage",
@@ -62,6 +64,7 @@ STORAGES = {
         "BACKEND": "whitenoise.storage.CompressedManifestStaticFilesStorage",
     },
 }
+
 # MEDIA
 # -----------------------------------------------------------------------------
 
@@ -105,7 +108,7 @@ LOGGING = {
     "version": 1,
     "disable_existing_loggers": False,
     "filters": {
-        "require_debug_false": {"()": "django.services.log.RequireDebugFalse"}
+        "require_debug_false": {"()": "django.utils.log.RequireDebugFalse"}
     },
     "formatters": {
         "verbose": {

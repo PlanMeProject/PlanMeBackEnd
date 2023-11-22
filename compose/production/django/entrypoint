@@ -5,4 +5,9 @@ set -o pipefail
 set -o nounset
 
 echo "Starting the application..."
+
+# Debug: Print important environment variables
+echo "PORT: ${PORT:-Not Set}"
+
+# Execute the command provided as arguments to this script
 exec "$@"
