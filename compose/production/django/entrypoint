@@ -4,43 +4,33 @@ set -o errexit
 set -o pipefail
 set -o nounset
 
+# Extract components from DATABASE_URL
+echo "Parsing DATABASE_URL..."
+export DB_HOST=$(echo $DATABASE_URL | grep -oP '(?<=@)[^:/]+')
+export DB_PORT=$(echo $DATABASE_URL | grep -oP '(?<=:)\d+(?=/)')
+export DB_USER=$(echo $DATABASE_URL | grep -oP '(?<=://)[^:]+')
+export DB_PASSWORD=$(echo $DATABASE_URL | grep -oP '(?<=:)[^@]+(?=@)')
+export DB_NAME=$(echo $DATABASE_URL | grep -oP '[^/]+$')
 
+echo "Extracted settings:"
+echo "DB_HOST: $DB_HOST"
+echo "DB_PORT: $DB_PORT"
+echo "DB_USER: $DB_USER"
+echo "DB_PASSWORD: [HIDDEN]"
+echo "DB_NAME: $DB_NAME"
 
+# Wait for PostgreSQL to become available
+echo 'Waiting for PostgreSQL to become available...'
+start=$(date +%s)
+while ! PGPASSWORD=$DB_PASSWORD psql -h "$DB_HOST" -U "$DB_USER" -p "$DB_PORT" -d "$DB_NAME" -c '\q' 2>/dev/null; do
+    sleep 1
+    now=$(date +%s)
+    if (( now - start > 90 )); then
+        echo "PostgreSQL is still not available after 90 seconds. Exiting."
+        exit 1
+    fi
+done
+echo 'PostgreSQL is available'
 
-if [ -z "${POSTGRES_USER}" ]; then
-    base_postgres_image_default_user='postgres'
-    export POSTGRES_USER="${base_postgres_image_default_user}"
-fi
-export DATABASE_URL="postgres://${POSTGRES_USER}:${POSTGRES_PASSWORD}@${POSTGRES_HOST}:${POSTGRES_PORT}/${POSTGRES_DB}"
-
-python << END
-import sys
-import time
-
-import psycopg
-
-suggest_unrecoverable_after = 30
-start = time.time()
-
-while True:
-    try:
-        psycopg.connect(
-            dbname="${POSTGRES_DB}",
-            user="${POSTGRES_USER}",
-            password="${POSTGRES_PASSWORD}",
-            host="${POSTGRES_HOST}",
-            port="${POSTGRES_PORT}",
-        )
-        break
-    except psycopg.OperationalError as error:
-        sys.stderr.write("Waiting for PostgreSQL to become available...\n")
-
-        if time.time() - start > suggest_unrecoverable_after:
-            sys.stderr.write("  This is taking longer than expected. The following exception may be indicative of an unrecoverable error: '{}'\n".format(error))
-
-    time.sleep(1)
-END
-
->&2 echo 'PostgreSQL is available'
-
+# Start the application
 exec "$@"
