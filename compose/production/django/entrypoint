@@ -4,33 +4,5 @@ set -o errexit
 set -o pipefail
 set -o nounset
 
-# Extract components from DATABASE_URL
-echo "Parsing DATABASE_URL..."
-export DB_HOST=$(echo $DATABASE_URL | grep -oP '(?<=@)[^:/]+')
-export DB_PORT=$(echo $DATABASE_URL | grep -oP '(?<=:)\d+(?=/)')
-export DB_USER=$(echo $DATABASE_URL | grep -oP '(?<=://)[^:]+')
-export DB_PASSWORD=$(echo $DATABASE_URL | grep -oP '(?<=:)[^@]+(?=@)')
-export DB_NAME=$(echo $DATABASE_URL | grep -oP '[^/]+$')
-
-echo "Extracted settings:"
-echo "DB_HOST: $DB_HOST"
-echo "DB_PORT: $DB_PORT"
-echo "DB_USER: $DB_USER"
-echo "DB_PASSWORD: [HIDDEN]"
-echo "DB_NAME: $DB_NAME"
-
-# Wait for PostgreSQL to become available
-echo 'Waiting for PostgreSQL to become available...'
-start=$(date +%s)
-while ! PGPASSWORD=$DB_PASSWORD psql -h "$DB_HOST" -U "$DB_USER" -p "$DB_PORT" -d "$DB_NAME" -c '\q' 2>/dev/null; do
-    sleep 1
-    now=$(date +%s)
-    if (( now - start > 90 )); then
-        echo "PostgreSQL is still not available after 90 seconds. Exiting."
-        exit 1
-    fi
-done
-echo 'PostgreSQL is available'
-
-# Start the application
+echo "Starting the application..."
 exec "$@"
