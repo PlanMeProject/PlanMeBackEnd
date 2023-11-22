@@ -22,13 +22,13 @@ class AuthorizationService:
 
     @staticmethod
     def exchange_code_for_token(authorization_code):
-        """Exchange authorization code for token."""
+        """Exchange user authorization code for token."""
         token_url = settings.TOKEN_URL
         data = {
             "code": authorization_code,
             "client_id": settings.GOOGLE_CLIENT_ID,
             "client_secret": settings.GOOGLE_CLIENT_SECRET,
-            "redirect_uri": settings.REDIRECT_URI,
+            "redirect_uri": "https://planme.vercel.app/google-auth",
             "grant_type": "authorization_code",
         }
         return HTTPRequestHandler.make_request("POST", token_url, data=data)
