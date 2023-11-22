@@ -5,6 +5,4 @@ set -o pipefail
 set -o nounset
 
 echo "Starting Gunicorn..."
-echo "Command: gunicorn config.wsgi:application --bind 0.0.0.0:${PORT:-8000} --log-level debug"
-
 exec gunicorn config.wsgi:application --bind 0.0.0.0:${PORT:-8000} --log-level debug

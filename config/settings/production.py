@@ -1,21 +1,19 @@
 import dj_database_url
-import django_heroku
 
 from .base import *  # noqa
-from .base import env
+from .base import BASE_DIR, env
 
 # GENERAL
 # -----------------------------------------------------------------------------
 SECRET_KEY = env("DJANGO_SECRET_KEY")
-ALLOWED_HOSTS = env.list("DJANGO_ALLOWED_HOSTS", default=["planme.com"])
+ALLOWED_HOSTS = env.list(
+    "DJANGO_ALLOWED_HOSTS", default=["planme-ff1a0ca44046.herokuapp.com"]
+)
 
 # DATABASES
 # -----------------------------------------------------------------------------
 DATABASES = {"default": dj_database_url.config(conn_max_age=600)}
-django_heroku.settings(locals())
-DATABASES["default"]["CONN_MAX_AGE"] = env.int(
-    "CONN_MAX_AGE", default=60
-)  # noqa: F405
+
 
 # CACHES
 # -----------------------------------------------------------------------------
@@ -56,6 +54,9 @@ SECURE_CONTENT_TYPE_NOSNIFF = env.bool(
 # ------------------------
 # STATIC
 # ------------------------
+STATIC_URL = "/static/"
+STATIC_ROOT = BASE_DIR / "staticfiles"
+
 STORAGES = {
     "default": {
         "BACKEND": "django.core.files.storage.FileSystemStorage",
@@ -64,6 +65,7 @@ STORAGES = {
         "BACKEND": "whitenoise.storage.CompressedManifestStaticFilesStorage",
     },
 }
+
 
 # MEDIA
 # -----------------------------------------------------------------------------
