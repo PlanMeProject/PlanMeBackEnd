@@ -5,7 +5,19 @@ from planmebackend.utils.model_abstracts import AbstractModel
 
 
 class DeletedTask(AbstractModel):
-    """Model definition for DeletedTask."""
+    """
+    Represents a task that has been marked as deleted in the system.
+
+    This model inherits from the AbstractModel and adds specific fields
+    for a deleted task.
+
+    :param title: The title of the deleted task.
+    :type title: models.CharField
+    :param course: The course associated with the deleted task, can be null.
+    :type course: models.CharField
+    :param user: The user who deleted the task.
+    :type user: models.ForeignKey
+    """
 
     class Meta:
         """Meta definition for DeletedTask."""

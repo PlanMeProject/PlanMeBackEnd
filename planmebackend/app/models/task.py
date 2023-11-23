@@ -5,7 +5,22 @@ from planmebackend.utils.model_abstracts import AbstractModel
 
 
 class Task(AbstractModel):
-    """Model definition for Task."""
+    """
+    Represents a task in the system.
+
+    This model inherits from the AbstractModel and includes fields for
+    task details such as title, description, due date, status, and more.
+
+    :param title: The title of the task.
+    :type title: models.CharField
+    :param description: A detailed description of the task, can be null.
+    :type description: models.TextField
+    :param summarized_text: A summarized version of the task, can be null.
+    :type summarized_text: models.TextField
+    :param due_date: The due date of the task, can be null.
+    :type due_date: models.DateField
+    :param status: The current status of the task.
+    """
 
     class Meta:
         """Meta definition for Task."""

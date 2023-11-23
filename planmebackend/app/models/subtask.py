@@ -5,7 +5,22 @@ from planmebackend.utils.model_abstracts import AbstractModel
 
 
 class SubTask(AbstractModel):
-    """Model definition for SubTask."""
+    """
+    Represents a subtask of a main task in the system.
+
+    This model inherits from the AbstractModel and contains details
+    about a subtask like its title, status, and associated main task.
+
+    :param title: The title of the subtask, defaults to 'No title'.
+    :type title: models.CharField
+    :param status: The current status of the subtask, defaults to 'Todo'.
+    :type status: models.CharField
+    :param task: The main task to which this subtask is linked.
+    :type task: models.ForeignKey
+
+    :return: A string representation of the subtask's title.
+    :rtype: str
+    """
 
     class Meta:
         """Meta definition for SubTask."""
