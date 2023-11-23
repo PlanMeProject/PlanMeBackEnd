@@ -11,7 +11,13 @@ class DeletedTaskViewSet(viewsets.ViewSet):
     """ViewSet for handling Deleted-Task-related operations."""
 
     def list(self, request, user_pk=None):
-        """List all Deleted Task objects for the user and courses."""
+        """
+        List all Deleted Tasks for a user.
+
+        :param request: The HTTP request.
+        :param user_pk: User's primary key.
+        :return: Response with deleted tasks or error message.
+        """
         user_pk = request.query_params.get("user_id", None)
 
         if not user_pk:
@@ -25,7 +31,13 @@ class DeletedTaskViewSet(viewsets.ViewSet):
         return Response(serializer.data, status=status.HTTP_200_OK)
 
     def create(self, request, user_pk=None):
-        """Create a new Deleted Task object for a specific user."""
+        """
+        Create a Deleted Task for a user.
+
+        :param request: The HTTP request with task data.
+        :param user_pk: User's primary key.
+        :return: Response with created task or error.
+        """
         data = request.data
         data["user"] = user_pk
         serializer = DeletedTaskSerializer(data=data)
@@ -35,7 +47,13 @@ class DeletedTaskViewSet(viewsets.ViewSet):
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
     def destroy(self, request, pk=None, **kwargs):
-        """Delete a Deleted Task object by ID."""
+        """
+        Delete a Deleted Task by ID.
+
+        :param request: The HTTP request.
+        :param pk: Primary key of the task to delete.
+        :return: Response indicating deletion status.
+        """
         try:
             task = DeletedTask.objects.get(id=pk)
         except ObjectDoesNotExist:

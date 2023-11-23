@@ -11,13 +11,25 @@ class SubTaskViewSet(viewsets.ViewSet):
     """ViewSet for handling SubTask-related operations."""
 
     def list(self, request, task_pk=None, **kwargs):
-        """List all SubTask objects for a specific task."""
+        """
+        List all SubTasks for a specific task.
+
+        :param request: The HTTP request.
+        :param task_pk: Task's primary key.
+        :return: Response with subtasks or error message.
+        """
         queryset = SubTask.objects.filter(task_id=task_pk)
         serializer = SubTaskSerializer(queryset, many=True)
         return Response(serializer.data, status=status.HTTP_200_OK)
 
     def create(self, request, task_pk=None, **kwargs):
-        """Create a new SubTask object for a specific task."""
+        """
+        Create a SubTask for a specific task.
+
+        :param request: The HTTP request with subtask data.
+        :param task_pk: Task's primary key.
+        :return: Response with created subtask or error.
+        """
         data = request.data
         data["task"] = task_pk
         serializer = SubTaskSerializer(data=data)
@@ -27,7 +39,13 @@ class SubTaskViewSet(viewsets.ViewSet):
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
     def retrieve(self, request, pk=None, *args, **kwargs):
-        """Retrieve a SubTask object by ID."""
+        """
+        Retrieve a SubTask object by ID.
+
+        :param request: The HTTP request.
+        :param pk: Primary key of the SubTask.
+        :return: Response with subtask data or error message.
+        """
         try:
             subtask = SubTask.objects.get(id=pk)
         except ObjectDoesNotExist:
@@ -39,7 +57,13 @@ class SubTaskViewSet(viewsets.ViewSet):
         return Response(serializer.data, status=status.HTTP_200_OK)
 
     def update(self, request, pk=None, **kwargs):
-        """Update an existing SubTask object by ID."""
+        """
+        Update an existing SubTask object by ID.
+
+        :param request: The HTTP request with updated data.
+        :param pk: Primary key of the SubTask to update.
+        :return: Response with updated subtask or error.
+        """
         try:
             subtask = SubTask.objects.get(id=pk)
         except ObjectDoesNotExist:
@@ -56,7 +80,13 @@ class SubTaskViewSet(viewsets.ViewSet):
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
     def destroy(self, request, pk=None, *args, **kwargs):
-        """Delete a SubTask object by ID."""
+        """
+        Delete a SubTask object by ID.
+
+        :param request: The HTTP request.
+        :param pk: Primary key of the SubTask to delete.
+        :return: Response indicating deletion status.
+        """
         try:
             subtask = SubTask.objects.get(id=pk)
 

@@ -10,14 +10,25 @@ from planmebackend.app.serializers import UserSerializer
 class UserViewSet(viewsets.ViewSet):
     """ViewSet for handling User-related operations."""
 
-    def list(self, request):
-        """List all User objects."""
+    def list(self, request, user_pk=None):
+        """
+        Retrieve a list of all users.
+
+        :param request: The incoming HTTP request.
+        :return: HTTP Response with a list of users or an error message.
+        """
         queryset = User.objects.all()
         serializer = UserSerializer(queryset, many=True)
         return Response(serializer.data, status=status.HTTP_200_OK)
 
     def retrieve(self, request, pk=None):
-        """Retrieve a User object by ID."""
+        """
+        Retrieve a User object by ID.
+
+        :param request: The incoming HTTP request.
+        :param pk: The primary key of the user to be retrieved.
+        :return: HTTP Response with user data or an error message.
+        """
         try:
             user = User.objects.get(id=pk)
         except ObjectDoesNotExist:
@@ -28,7 +39,13 @@ class UserViewSet(viewsets.ViewSet):
         return Response(serializer.data, status=status.HTTP_200_OK)
 
     def create(self, request):
-        """Create a new User object."""
+        """
+        Create a new User object.
+
+        :param request: The incoming HTTP request containing the new User data.
+        :return: HTTP Response with the created User object or
+        an error message.
+        """
         serializer = UserSerializer(data=request.data)
         if serializer.is_valid():
             serializer.save()
@@ -36,7 +53,13 @@ class UserViewSet(viewsets.ViewSet):
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
     def update(self, request, pk=None):
-        """Update an existing User object by ID."""
+        """
+        Update an existing User object by ID.
+
+        :param request: The incoming HTTP request with updated User data.
+        :param pk: The primary key of the user to be updated.
+        :return: HTTP Response with updated user data or an error message.
+        """
         try:
             user = User.objects.get(id=pk)
         except ObjectDoesNotExist:
@@ -50,7 +73,14 @@ class UserViewSet(viewsets.ViewSet):
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
     def destroy(self, request, pk=None):
-        """Delete a User object by ID."""
+        """
+        Delete a User object by ID.
+
+        :param request: The incoming HTTP request.
+        :param pk: The primary key of the user to be deleted.
+        :return: HTTP Response indicating successful deletion or
+        an error message.
+        """
         try:
             user = User.objects.get(id=pk)
         except ObjectDoesNotExist:
