@@ -12,10 +12,16 @@ from planmebackend.classroom.services import (
 
 
 class AuthorizationViewSet(viewsets.ViewSet):
-    """Class definition for AuthorizationViewSet."""
+    """
+    Class definition for AuthorizationViewSet.
+    """
 
     def create(self, request, *args, **kwargs):
-        """Create user and return token."""
+        """
+        Create a user and return a token based on the Google Classroom data.
+        :param request: The HTTP request containing the full URL.
+        :return: HTTP Response with token and user data or an error message.
+        """
         full_url = request.data.get("full_url")
         logging.info("Full URL: " + full_url)
         if not full_url:

@@ -8,10 +8,17 @@ from planmebackend.classroom.services import AssignmentsService
 
 
 class AssignmentsViewSet(viewsets.ViewSet):
-    """Class definition for AssignmentsViewSet."""
+    """
+    Class definition for AssignmentsViewSet.
+    """
 
     def create(self, request, *args, **kwargs):
-        """Create tasks from Google Classroom."""
+        """
+        Create tasks from Google Classroom.
+
+        :param request: The HTTP request containing classroom data.
+        :return: HTTP Response with created tasks or an error message.
+        """
         data = request.data
         access_token = data.get("access_token")
         courses = data.get("all_courses", {}).get("data", [])
