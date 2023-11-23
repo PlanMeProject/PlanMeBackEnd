@@ -15,7 +15,13 @@ class GoogleClassroomAPI:
 
     @classmethod
     def get_course_work(cls, access_token, course_id):
-        """Get course work from Google Classroom."""
+        """
+        Retrieve course work from Google Classroom.
+
+        :param access_token: Access token for API.
+        :param course_id: ID of the course.
+        :return: Course work data.
+        """
         url = (
             f"{GOOGLE_CLASSROOM_API_BASE}"
             f"{COURSE_WORK_ENDPOINT.format(course_id=course_id)}"
@@ -27,7 +33,14 @@ class GoogleClassroomAPI:
 
     @classmethod
     def get_student_submissions(cls, access_token, course_id, course_work_id):
-        """Get student submissions from Google Classroom."""
+        """
+        Get student submissions from Google Classroom.
+
+        :param access_token: Access token for API.
+        :param course_id: ID of the course.
+        :param course_work_id: ID of the course work.
+        :return: Student submissions data.
+        """
         url = (
             f"{GOOGLE_CLASSROOM_API_BASE}"
             f"{STUDENT_SUBMISSIONS_ENDPOINT.format(course_id=course_id, course_work_id=course_work_id)}"  # noqa: E501
@@ -39,7 +52,14 @@ class GoogleClassroomAPI:
 
     @classmethod
     def should_skip_assignment(cls, access_token, course_id, assignment):
-        """Check if assignment should be skipped."""
+        """
+        Determine if an assignment should be skipped.
+
+        :param access_token: Access token for API.
+        :param course_id: ID of the course.
+        :param assignment: Assignment data.
+        :return: Boolean indicating if assignment should be skipped.
+        """
         student_submissions = cls.get_student_submissions(
             access_token, course_id, assignment.get("id")
         )
@@ -49,7 +69,12 @@ class GoogleClassroomAPI:
 
     @staticmethod
     def parse_due_date(due_date_data):
-        """Parse due date from due date data."""
+        """
+        Parse due date from provided data.
+
+        :param due_date_data: Due date data.
+        :return: Parsed due date or None.
+        """
         if not due_date_data:
             return None
         return date(
