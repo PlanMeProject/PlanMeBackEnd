@@ -5,7 +5,13 @@ from planmebackend.app.models import SubTask
 
 
 class SubTaskSerializer(serializers.ModelSerializer):
-    """Serializer definition for SubTask."""
+    """
+    Serializer for the SubTask model.
+
+    Facilitates the serialization and deserialization of SubTask model
+    instances, enabling their easy conversion to JSON and back for
+    API interactions.
+    """
 
     class Meta:
         """Meta definition for SubTask."""

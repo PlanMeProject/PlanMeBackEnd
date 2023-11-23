@@ -5,7 +5,12 @@ from planmebackend.app.models import DeletedTask
 
 
 class DeletedTaskSerializer(serializers.ModelSerializer):
-    """Serializer definition for Deleted Task."""
+    """
+    Serializer for the DeletedTask model.
+
+    This serializer provides a mechanism for querying and saving instances of
+    the DeletedTask model, converting them to and from JSON format.
+    """
 
     class Meta:
         """Meta definition for Deleted Task."""
