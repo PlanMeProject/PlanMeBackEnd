@@ -26,7 +26,7 @@ class CoursesViewSet(viewsets.ViewSet):
                 {"title": course}
                 for course in classroom_data.get("courses", [])
             ]
-
+            logging.info(f"Courses: {courses}, from token: {access_token}")
             return Response(courses, status=status.HTTP_200_OK)
 
         except Exception as e:

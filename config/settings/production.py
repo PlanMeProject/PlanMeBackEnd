@@ -7,7 +7,7 @@ from .base import BASE_DIR, env
 # -----------------------------------------------------------------------------
 SECRET_KEY = env("DJANGO_SECRET_KEY")
 ALLOWED_HOSTS = env.list(
-    "DJANGO_ALLOWED_HOSTS", default=["planme-ff1a0ca44046.herokuapp.com"]
+    "DJANGO_ALLOWED_HOSTS", default=["planme-3366bb9023b7.herokuapp.com"]
 )
 
 # DATABASES
