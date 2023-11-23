@@ -10,17 +10,6 @@ from planmebackend.app.serializers import UserSerializer
 class UserViewSet(viewsets.ViewSet):
     """ViewSet for handling User-related operations."""
 
-    def list(self, request, user_pk=None):
-        """
-        Retrieve a list of all users.
-
-        :param request: The incoming HTTP request.
-        :return: HTTP Response with a list of users or an error message.
-        """
-        queryset = User.objects.all()
-        serializer = UserSerializer(queryset, many=True)
-        return Response(serializer.data, status=status.HTTP_200_OK)
-
     def retrieve(self, request, pk=None):
         """
         Retrieve a User object by ID.
