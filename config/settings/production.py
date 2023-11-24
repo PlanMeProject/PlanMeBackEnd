@@ -5,7 +5,7 @@ from .base import BASE_DIR, env
 
 # GENERAL
 # -----------------------------------------------------------------------------
-SECRET_KEY = env("DJANGO_SECRET_KEY")
+SECRET_KEY = env("DJANGO_SECRET_KEY", default="secret")
 ALLOWED_HOSTS = env.list(
     "DJANGO_ALLOWED_HOSTS", default=["planme-3366bb9023b7.herokuapp.com"]
 )
