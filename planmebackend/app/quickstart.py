@@ -119,6 +119,7 @@ class GoogleClassroomAPI:
                     self.assignments_seen[assignment_id] = today.isoformat()
                     email_subject = f"New Assignment in {course_data['course_name']}"
                     email_body = f"New assignment: {assignment['title']}"
+                    print(email_body)
                     self.send_email(recipient_email, email_subject, email_body)
 
                 # Check if today is three days before the due date

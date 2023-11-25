@@ -6,7 +6,7 @@ mocking to simulate the behavior of external dependencies like file operations a
 
 import unittest
 from unittest.mock import patch, MagicMock
-from notification import NotificationSystem
+from planmebackend.notification2.notification import NotificationSystem
 
 class TestNotificationSystem(unittest.TestCase):
     """
