@@ -1,4 +1,5 @@
 import dj_database_url
+from decouple import config
 
 from .base import *  # noqa
 from .base import BASE_DIR, env
@@ -12,13 +13,7 @@ ALLOWED_HOSTS = env.list(
 
 # DATABASES
 # -----------------------------------------------------------------------------
-DATABASES = {
-    "default": dj_database_url.config(
-        default="postgres://yjvvcbrqnsezeq:16dfc07bb282934614c9c31501fab79edc"
-        "c241eff8d862cda49f34d88f3593df@ec2-107-21-67-46.compute-1.am"
-        "azonaws.com:5432/d7f9buh60754r3"
-    )
-}
+DATABASES = {"default": dj_database_url.config(default=config("DATABASE_URL"))}
 
 # CACHES
 # -----------------------------------------------------------------------------
