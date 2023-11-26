@@ -116,7 +116,10 @@ class AssignmentsService:
         """
         return Task(
             title=assignment.get("title", ""),
-            description=assignment.get("description", ""),
+            description=assignment.get(
+                "description",
+                "You should fill in the description to use the AI.",
+            ),
             summarized_text=assignment.get("description", ""),
             due_date=due_date,
             status="Todo",
