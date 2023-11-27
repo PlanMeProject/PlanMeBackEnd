@@ -8,13 +8,12 @@ from planmebackend.classroom.services import CoursesService
 
 
 class CoursesViewSet(viewsets.ViewSet):
-    """
-    Class definition for CoursesViewSet.
-    """
+    """Class definition for CoursesViewSet."""
 
     def create(self, request, *args, **kwargs):
         """
         Retrieve courses from Google Classroom.
+
         :param request: The HTTP request containing the access token.
         :return: HTTP Response with courses data or an error message.
         """

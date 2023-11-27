@@ -7,9 +7,7 @@ from .google_classroom_service import GoogleClassroomAPI
 
 
 class AssignmentsService:
-    """
-    Service for handling operations related to assignments.
-    """
+    """Service for handling operations related to assignments."""
 
     @staticmethod
     def get_user(user_id):

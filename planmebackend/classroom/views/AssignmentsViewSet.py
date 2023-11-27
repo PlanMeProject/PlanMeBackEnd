@@ -8,9 +8,7 @@ from planmebackend.classroom.services import AssignmentsService
 
 
 class AssignmentsViewSet(viewsets.ViewSet):
-    """
-    Class definition for AssignmentsViewSet.
-    """
+    """Class definition for AssignmentsViewSet."""
 
     def create(self, request, *args, **kwargs):
         """
