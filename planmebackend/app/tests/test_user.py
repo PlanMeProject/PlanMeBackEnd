@@ -18,8 +18,7 @@ class UserTestCase(BaseTestCase):
             "data": {
                 "type": "UserViewSet",
                 "attributes": {
-                    "username": "NewUser",
-                    "password": "NewPassword",
+                    "email": "mail@mail.cpm",
                     "token": self.token.key,
                 },
             }
