@@ -27,20 +27,6 @@ class UserViewSet(viewsets.ViewSet):
         serializer = UserSerializer(user)
         return Response(serializer.data, status=status.HTTP_200_OK)
 
-    def create(self, request):
-        """
-        Create a new User object.
-
-        :param request: The incoming HTTP request containing the new User data.
-        :return: HTTP Response with the created User object or
-        an error message.
-        """
-        serializer = UserSerializer(data=request.data)
-        if serializer.is_valid():
-            serializer.save()
-            return Response(serializer.data, status=status.HTTP_201_CREATED)
-        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-
     def update(self, request, pk=None):
         """
         Update an existing User object by ID.

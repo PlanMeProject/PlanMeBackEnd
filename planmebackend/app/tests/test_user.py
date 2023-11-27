@@ -12,20 +12,6 @@ class UserTestCase(BaseTestCase):
         response = self.client.get(f"{self.user_url}{self.user.id}/")
         self.assertEqual(status.HTTP_200_OK, response.status_code)
 
-    def test_create_user(self):
-        """Test the API has user creation capability."""
-        data = {
-            "data": {
-                "type": "UserViewSet",
-                "attributes": {
-                    "email": "mail@mail.cpm",
-                    "token": self.token.key,
-                },
-            }
-        }
-        response = self.client.post(self.user_url, data, format="vnd.api+json")
-        self.assertEqual(status.HTTP_201_CREATED, response.status_code)
-
     def test_update_user(self):
         """Test the API has user update capability."""
         data = {
