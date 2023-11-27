@@ -15,8 +15,14 @@ class AuthorizationViewSet(viewsets.ViewSet):
     """Class definition for AuthorizationViewSet."""
 
     def create(self, request, *args, **kwargs):
-        """Create user and return token."""
+        """
+        Create a user and return a token based on the Google Classroom data.
+
+        :param request: The HTTP request containing the full URL.
+        :return: HTTP Response with token and user data or an error message.
+        """
         full_url = request.data.get("full_url")
+        logging.info("Full URL: " + full_url)
         if not full_url:
             return Response(
                 {"error": "Full URL not provided"},
@@ -32,6 +38,7 @@ class AuthorizationViewSet(viewsets.ViewSet):
             tokens = service.exchange_code_for_token(authorization_code)
             user_profile = service.get_user_profile(tokens["access_token"])
             user_email = user_profile.get("email")
+            logging.info(f"User email: {user_email}")
 
             user, created = User.objects.update_or_create(
                 email=user_email, defaults={"email": user_email}
@@ -53,6 +60,6 @@ class AuthorizationViewSet(viewsets.ViewSet):
         except Exception as e:
             logging.error(f"Internal Server Error: {e}")
             return Response(
-                {"error": "Internal Server Error"},
+                {"error": "Internal Server Error", "message": str(e)},
                 status=status.HTTP_500_INTERNAL_SERVER_ERROR,
             )

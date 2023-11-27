@@ -33,6 +33,7 @@ jobs:
           GOOGLE_CLIENT_ID: ${{ secrets.GOOGLE_CLIENT_ID }}
           GOOGLE_CLIENT_SECRET: ${{ secrets.GOOGLE_CLIENT_SECRET }}
           REDIRECT_URI: ${{ secrets.REDIRECT_URI }}
+          DATABASE_URL: ${{ secrets.DATABASE_URL }}
 
   test:
     needs: migrate

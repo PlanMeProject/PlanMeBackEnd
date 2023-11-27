@@ -11,7 +11,12 @@ class CoursesViewSet(viewsets.ViewSet):
     """Class definition for CoursesViewSet."""
 
     def create(self, request, *args, **kwargs):
-        """Get courses from Google Classroom."""
+        """
+        Retrieve courses from Google Classroom.
+
+        :param request: The HTTP request containing the access token.
+        :return: HTTP Response with courses data or an error message.
+        """
         access_token = request.data.get("access_token")
         if not access_token:
             return Response(
@@ -26,7 +31,7 @@ class CoursesViewSet(viewsets.ViewSet):
                 {"title": course}
                 for course in classroom_data.get("courses", [])
             ]
-
+            logging.info(f"Courses: {courses}, from token: {access_token}")
             return Response(courses, status=status.HTTP_200_OK)
 
         except Exception as e:

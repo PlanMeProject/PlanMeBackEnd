@@ -11,7 +11,13 @@ class TaskViewSet(viewsets.ViewSet):
     """ViewSet for handling Task-related operations."""
 
     def list(self, request, user_pk=None):
-        """List all Task objects for a specific user and specific courses."""
+        """
+        List all Task objects for a specific user and courses.
+
+        :param request: The HTTP request.
+        :param user_pk: User's primary key.
+        :return: Response with tasks or error message.
+        """
         user_pk = request.query_params.get("user_id", None)
         courses = request.query_params.getlist("courses", None)
 
@@ -29,7 +35,13 @@ class TaskViewSet(viewsets.ViewSet):
         return Response(serializer.data, status=status.HTTP_200_OK)
 
     def create(self, request, user_pk=None):
-        """Create a new Task object for a specific user."""
+        """
+        Create a new Task object for a specific user.
+
+        :param request: The HTTP request with task data.
+        :param user_pk: User's primary key.
+        :return: Response with created task or error.
+        """
         data = request.data
         data["user"] = user_pk
         serializer = TaskSerializer(data=data)
@@ -39,7 +51,13 @@ class TaskViewSet(viewsets.ViewSet):
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
     def retrieve(self, request, pk=None, **kwargs):
-        """Retrieve a Task object by ID."""
+        """
+        Retrieve a Task object by ID.
+
+        :param request: The HTTP request.
+        :param pk: Primary key of the Task.
+        :return: Response with task data or error message.
+        """
         try:
             task = Task.objects.get(id=pk)
         except ObjectDoesNotExist:
@@ -50,7 +68,14 @@ class TaskViewSet(viewsets.ViewSet):
         return Response(serializer.data, status=status.HTTP_200_OK)
 
     def update(self, request, pk=None, user_pk=None, **kwargs):
-        """Update an existing Task object by ID."""
+        """
+        Update an existing Task object by ID.
+
+        :param request: The HTTP request with updated data.
+        :param pk: Primary key of the Task to update.
+        :param user_pk: User's primary key.
+        :return: Response with updated task or error.
+        """
         try:
             task = Task.objects.get(id=pk)
         except ObjectDoesNotExist:
@@ -67,7 +92,13 @@ class TaskViewSet(viewsets.ViewSet):
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
     def destroy(self, request, pk=None, **kwargs):
-        """Delete a Task object by ID and create a DeletedTask record."""
+        """
+        Delete a Task object by ID and create a DeletedTask record.
+
+        :param request: The HTTP request.
+        :param pk: Primary key of the Task to delete.
+        :return: Response indicating deletion status.
+        """
         try:
             task = Task.objects.get(id=pk)
         except ObjectDoesNotExist:

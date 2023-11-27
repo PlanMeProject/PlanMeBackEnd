@@ -1,28 +1,27 @@
 import dj_database_url
-import django_heroku
+from decouple import config
 
 from .base import *  # noqa
-from .base import env
+from .base import BASE_DIR, env
 
 # GENERAL
 # -----------------------------------------------------------------------------
-SECRET_KEY = env("DJANGO_SECRET_KEY")
-ALLOWED_HOSTS = env.list("DJANGO_ALLOWED_HOSTS", default=["planme.com"])
+SECRET_KEY = env("DJANGO_SECRET_KEY", default="secret")
+ALLOWED_HOSTS = env.list(
+    "DJANGO_ALLOWED_HOSTS", default=["planme-3366bb9023b7.herokuapp.com"]
+)
 
 # DATABASES
 # -----------------------------------------------------------------------------
-DATABASES = {"default": dj_database_url.config(conn_max_age=600)}
-django_heroku.settings(locals())
-DATABASES["default"]["CONN_MAX_AGE"] = env.int(
-    "CONN_MAX_AGE", default=60
-)  # noqa: F405
+DATABASE_URL = config("DATABASE_URL", "")
+DATABASES = {"default": dj_database_url.config(default=DATABASE_URL)}
 
 # CACHES
 # -----------------------------------------------------------------------------
 CACHES = {
     "default": {
         "BACKEND": "django_redis.cache.RedisCache",
-        "LOCATION": env("REDIS_URL"),
+        "LOCATION": env("REDIS_URL", default="none"),
         "OPTIONS": {
             "CLIENT_CLASS": "django_redis.client.DefaultClient",
             "IGNORE_EXCEPTIONS": True,
@@ -54,6 +53,11 @@ SECURE_CONTENT_TYPE_NOSNIFF = env.bool(
 
 # STATIC
 # ------------------------
+# STATIC
+# ------------------------
+STATIC_URL = "/static/"
+STATIC_ROOT = BASE_DIR / "staticfiles"
+
 STORAGES = {
     "default": {
         "BACKEND": "django.core.files.storage.FileSystemStorage",
@@ -62,6 +66,8 @@ STORAGES = {
         "BACKEND": "whitenoise.storage.CompressedManifestStaticFilesStorage",
     },
 }
+
+
 # MEDIA
 # -----------------------------------------------------------------------------
 
@@ -83,7 +89,7 @@ EMAIL_SUBJECT_PREFIX = env(
 # ADMIN
 # -----------------------------------------------------------------------------
 # Django Admin URL regex.
-ADMIN_URL = env("DJANGO_ADMIN_URL")
+ADMIN_URL = env("DJANGO_ADMIN_URL", default="admin/")
 
 # Anymail
 # -----------------------------------------------------------------------------
@@ -105,7 +111,7 @@ LOGGING = {
     "version": 1,
     "disable_existing_loggers": False,
     "filters": {
-        "require_debug_false": {"()": "django.services.log.RequireDebugFalse"}
+        "require_debug_false": {"()": "django.utils.log.RequireDebugFalse"}
     },
     "formatters": {
         "verbose": {

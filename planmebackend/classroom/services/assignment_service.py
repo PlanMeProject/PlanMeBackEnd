@@ -7,11 +7,17 @@ from .google_classroom_service import GoogleClassroomAPI
 
 
 class AssignmentsService:
-    """Class definition for AssignmentsService."""
+    """Service for handling operations related to assignments."""
 
     @staticmethod
     def get_user(user_id):
-        """Get user by id."""
+        """
+        Retrieve a user by their ID.
+
+        :param user_id: ID of the user to retrieve.
+        :return: User instance.
+        :raises: Exception if user not found.
+        """
         User = get_user_model()
         try:
             return User.objects.get(id=user_id)
@@ -19,7 +25,15 @@ class AssignmentsService:
             raise Exception("User not found")
 
     def process_courses(self, courses, access_token, check_status, user):
-        """Process courses from Google Classroom."""
+        """
+        Process courses from Google Classroom.
+
+        :param courses: List of courses to process.
+        :param access_token: Google Classroom API access token.
+        :param check_status: Status to check for assignments.
+        :param user: User associated with the courses.
+        :return: List of new task instances.
+        """
         new_tasks = []
         for course in courses:
             course_id = course.get("title", {}).get("id", "")
@@ -48,6 +62,17 @@ class AssignmentsService:
         check_status,
         user,
     ):
+        """
+        Process assignments from Google Classroom.
+
+        :param assignments: Assignments to process.
+        :param course_id: ID of the course.
+        :param course_name: Name of the course.
+        :param access_token: Google Classroom API access token.
+        :param check_status: Status to check for assignments.
+        :param user: User associated with the assignments.
+        :return: List of task instances.
+        """
         """Process assignments from Google Classroom."""
         tasks = []
         for assignment in assignments:
@@ -78,10 +103,21 @@ class AssignmentsService:
 
     @staticmethod
     def create_task_from_assignment(assignment, due_date, user, course_name):
-        """Create task from assignment."""
+        """
+        Create a Task instance from an assignment.
+
+        :param assignment: Assignment data.
+        :param due_date: Due date of the assignment.
+        :param user: User associated with the assignment.
+        :param course_name: Name of the course.
+        :return: Task instance.
+        """
         return Task(
             title=assignment.get("title", ""),
-            description=assignment.get("description", ""),
+            description=assignment.get(
+                "description",
+                "You should fill in the description to use the AI.",
+            ),
             summarized_text=assignment.get("description", ""),
             due_date=due_date,
             status="Todo",
