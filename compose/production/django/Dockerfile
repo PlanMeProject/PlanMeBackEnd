@@ -1,5 +1,5 @@
 # Python build stage
-FROM python:3.11.6-slim-bullseye as python-build-stage
+FROM python:3.11.8-slim-bullseye as python-build-stage
 
 ARG BUILD_ENVIRONMENT=production
 
@@ -13,7 +13,7 @@ COPY ./requirements .
 RUN pip wheel --wheel-dir /wheels -r ${BUILD_ENVIRONMENT}.txt
 
 # Python 'run' stage
-FROM python:3.11.6-slim-bullseye as python-run-stage
+FROM python:3.11.8-slim-bullseye as python-run-stage
 
 ARG BUILD_ENVIRONMENT=production
 ARG APP_HOME=/app
